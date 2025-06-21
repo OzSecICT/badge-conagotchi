@@ -1,0 +1,83 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Flash MicroPython Firmware",
+            "type": "shell",
+            "command": "bash",
+            "args": ["${workspaceFolder}/scripts/flash.sh"],
+            "windows": {
+              "command": "cmd.exe",
+              "args": ["/c", "${workspaceFolder}/scripts/flash.bat"]
+            },
+            "linux": {
+              "command": "bash",
+              "args": ["${workspaceFolder}/scripts/flash.sh"]
+            },
+            "osx": {
+              "command": "bash",
+              "args": ["${workspaceFolder}/scripts/flash.sh"]
+            },
+            "problemMatcher": [],
+            "group": {
+              "kind": "build",
+              "isDefault": false
+            }
+        },
+        {
+            "label": "Upload Code",
+            "type": "shell",
+            "command": "mpremote",
+            "args": ["cp", "-r", "${workspaceFolder}/source/*", ":"],
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "label": "Bulk Upload Code",
+            "type": "shell",
+            "command": "${env:COMSPEC}",
+            "args": ["/c", "${workspaceFolder}/upload.bat"],
+            "windows": {
+              "command": "cmd.exe",
+              "args": ["/c", "${workspaceFolder}/upload.bat"]
+            },
+            "linux": {
+              "command": "bash",
+              "args": ["${workspaceFolder}/upload.sh"]
+            },
+            "osx": {
+              "command": "bash",
+              "args": ["${workspaceFolder}/upload.sh"]
+            },
+            "problemMatcher": [],
+            "group": {
+              "kind": "build",
+              "isDefault": false
+            }
+        },          
+        {
+            "label": "Reset Device",
+            "type": "shell",
+            "command": "mpremote",
+            "args": ["reset"],
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+          "label": "Upload and Reset",
+          "dependsOn": ["Upload Code", "Reset Device"],
+          "dependsOrder": "sequence",
+          "problemMatcher": [],
+          "group": {
+              "kind": "build",
+              "isDefault": true
+          }
+        }
+    ]
+}
