@@ -1,0 +1,116 @@
+(footprint "MY-AA-04_BT1A"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(property "Reference" "BT1A"
+		(at -21.465395 0.95 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(uuid "0deb94fc-9f8b-45e2-b6fe-06922189ba2d")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+		)
+	)
+	(property "Value" "Battery clip positive"
+		(at -20.5 3.5 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "85b67993-0086-48d5-9ff8-2be3f52b864c")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2203021630_MYOUNG-MY-AA-04_C2979179.pdf"
+		(at -12 7 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "9dd3f361-29b4-46c5-b843-e36ff3a2d1fd")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" "SMD Battery clips for AA battery."
+		(at -19 9 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "296dfb0e-7957-498a-b2f0-3d06211349f8")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "LCSC" "C2979179"
+		(at -21 5.5 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "bfa86e36-1f84-48c3-b18f-83f1147ef0d8")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Link" "https://jlcpcb.com/partdetail/Myoung-MY_AA04/C2979179"
+		(at -18.5 11 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "d4b40d8a-2c89-4388-aa7a-1ba4d880758d")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd)
+	(pad "1" smd roundrect
+		(at -27.63 -0.1 180)
+		(size 3.96 2.34)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(roundrect_rratio 0.25)
+		(thermal_bridge_angle 45)
+		(uuid "7bd8aba0-54bc-457d-8635-62518ac1f044")
+	)
+	(pad "1" smd roundrect
+		(at -14.55 -0.1 180)
+		(size 3.96 5.08)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(roundrect_rratio 0.25)
+		(thermal_bridge_angle 45)
+		(uuid "5ada7bc0-dc64-442d-8e71-84f9f569c2d7")
+	)
+	(group ""
+		(uuid "10aa8cf6-a3bc-432e-a3bf-2a1214517e2b")
+		(members "5ada7bc0-dc64-442d-8e71-84f9f569c2d7" "7bd8aba0-54bc-457d-8635-62518ac1f044")
+	)
+	(embedded_fonts no)
+	(model "${KIPRJMOD}/3dmodels/BAT-SMD_MY-AAA-06.step"
+		(offset
+			(xyz -21.5 0 0.5)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz -0 -0 -90)
+		)
+	)
+)

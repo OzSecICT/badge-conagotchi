@@ -1,0 +1,96 @@
+(footprint "RPS_Controls"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(property "Reference" "REF**"
+		(at 0 -0.5 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(hide yes)
+		(uuid "81963f37-0730-4a1a-8d60-d5b50f28cdc9")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+		)
+	)
+	(property "Value" "RPS_Controls"
+		(at 0 1 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "541533de-89b8-4cf2-9910-df842816b96f")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "97cc37c8-ee38-4c87-9637-443225aa3294")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "25cfbcb1-5f12-4341-b900-69f431741b5a")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd)
+	(fp_poly
+		(pts
+			(xy -2.417771 -0.85) (xy -1.817771 -1.5) (xy -1.817771 -0.2)
+		)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill yes)
+		(layer "F.SilkS")
+		(uuid "96e66b25-7e63-4739-90c6-562160d6ec47")
+	)
+	(fp_poly
+		(pts
+			(xy -1.05 -2.25) (xy -1.7 -1.65) (xy -0.4 -1.65)
+		)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill yes)
+		(layer "F.SilkS")
+		(uuid "8f80c002-65aa-4726-af20-264542398e16")
+	)
+	(fp_poly
+		(pts
+			(xy 0.3 -0.85) (xy -0.3 -0.2) (xy -0.3 -1.5)
+		)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill yes)
+		(layer "F.SilkS")
+		(uuid "f9c8bfc1-85cf-4fa5-8f7d-4a43597661ab")
+	)
+	(embedded_fonts no)
+)

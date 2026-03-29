@@ -1,0 +1,113 @@
+(footprint "Instructions"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(property "Reference" "REF**"
+		(at 0 -0.5 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(hide yes)
+		(uuid "9780e39c-146d-4a27-8976-a6aabcf73f8f")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+		)
+	)
+	(property "Value" "Instructions"
+		(at 0 1 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "09e85b20-439b-4816-9db0-9d92f197d2db")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "3a271875-65a8-4692-bc54-abbb2159677b")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "6cbef316-d8f1-49e8-9ff7-acd5c215b6bf")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd)
+	(fp_text user "select    Cycle through minigames"
+		(at -11.95 -7.15 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(uuid "1d753213-319f-47d1-8ad8-c232b6ecf887")
+		(effects
+			(font
+				(size 1.5 1.5)
+				(thickness 0.1875)
+			)
+			(justify left bottom)
+		)
+	)
+	(fp_text user "more info  https://lightthebadge.quest"
+		(at -13.65 -1.9 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(uuid "99e03530-ad08-41d1-a813-bc6f0d5cf4f0")
+		(effects
+			(font
+				(size 1.5 1.5)
+				(thickness 0.1875)
+			)
+			(justify left bottom)
+		)
+	)
+	(fp_text user "start     Play the selected minigame"
+		(at -11.35 -4.45 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(uuid "9e56292d-2156-4093-b21d-9a0f09a495a1")
+		(effects
+			(font
+				(size 1.5 1.5)
+				(thickness 0.1875)
+			)
+			(justify left bottom)
+		)
+	)
+	(fp_text user "Instructions"
+		(at -2.85 -11.15 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(uuid "bd089e46-1bbc-44ca-9cf5-a5d7bde697b3")
+		(effects
+			(font
+				(size 2.5 2.5)
+				(thickness 0.5)
+				(bold yes)
+			)
+			(justify left bottom)
+		)
+	)
+	(embedded_fonts no)
+)

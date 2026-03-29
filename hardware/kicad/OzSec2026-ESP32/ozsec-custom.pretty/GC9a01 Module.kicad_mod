@@ -1,0 +1,106 @@
+(footprint "GC9a01 Module"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(property "Reference" "REF**"
+		(at 0 -0.5 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(hide yes)
+		(uuid "e871e5a1-e8b3-4451-9e43-ca591a02ebce")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+		)
+	)
+	(property "Value" "GC9a01 Module"
+		(at 0 1 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "e535bf7c-63f5-48c7-a685-d909dba8df48")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "c8de4521-89b5-4f12-9af1-8a20aa7b161a")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "4d0ce524-d2a2-4fc8-a3c9-76e62daf68fa")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "LCSC" "C42431840"
+		(at -0.05 4.35 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "b5499632-5a8a-4fbb-b0e8-65b1c45c711e")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd)
+	(fp_circle
+		(center -0.05 -19.375016)
+		(end 19.45 -19.400016)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill yes)
+		(layer "Dwgs.User")
+		(uuid "4f3efa09-1aa8-486a-89b6-171498713c16")
+	)
+	(fp_circle
+		(center 0 -19.450016)
+		(end 19.5 -19.475016)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(fill no)
+		(layer "Dwgs.User")
+		(uuid "aa6f3f29-3574-4a14-b00d-a7cb8d4e82e1")
+	)
+	(embedded_fonts no)
+	(model "/Users/jason/Documents/KiCad/9.0/3dmodels/LCD 1.28 Inch GC9A01.step"
+		(offset
+			(xyz 0 16.5 9.5)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz -0 90 -90)
+		)
+	)
+)

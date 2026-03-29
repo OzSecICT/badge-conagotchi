@@ -1,0 +1,7 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "ozsec-custom")(type "KiCad")(uri "${KIPRJMOD}/ozsec-custom.pretty")(options "")(descr ""))
+  (lib (name "ozsec-2024")(type "KiCad")(uri "${KIPRJMOD}/ozsec-2024.pretty")(options "")(descr ""))
+  (lib (name "ozsec-2025")(type "KiCad")(uri "${KIPRJMOD}/ozsec-2025.pretty")(options "")(descr ""))
+  (lib (name "ozsec-2026")(type "KiCad")(uri "${KIPRJMOD}/ozsec-2026.pretty")(options "")(descr ""))
+)

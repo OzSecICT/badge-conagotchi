@@ -1,0 +1,110 @@
+(footprint "Floppy_Slide"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(property "Reference" "REF**"
+		(at 0 -2 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(hide yes)
+		(uuid "d52c60f2-3d51-4568-ad39-ed3f481adf31")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+		)
+	)
+	(property "Value" "Floppy_Slide"
+		(at 0 -4.5 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "9918081a-b04d-4d85-8f1b-bb9b0e8bbed2")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "0f6dd53e-c0de-4398-a729-fe045f3b669f")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "32734d74-45ae-4d39-a75a-e6f91ebeb590")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd)
+	(fp_poly
+		(pts
+			(xy 24.210023 25.000015) (xy -25.790023 25.000015) (xy -25.790023 22.499924) (xy -18.523284 22.499924)
+			(xy -6.522987 22.499924) (xy -6.522987 2.500107) (xy -18.523284 2.500107) (xy -18.523284 22.499924)
+			(xy -25.790023 22.499924) (xy -25.790023 0) (xy 24.210023 0)
+		)
+		(stroke
+			(width -0.000001)
+			(type solid)
+		)
+		(fill yes)
+		(layer "F.Cu")
+		(uuid "10781457-6d8a-4bb3-840d-0a2c9a67fe5c")
+	)
+	(fp_poly
+		(pts
+			(xy 24.210023 25.000015) (xy -25.790023 25.000015) (xy -25.790023 22.499924) (xy -18.523284 22.499924)
+			(xy -6.522987 22.499924) (xy -6.522987 2.500107) (xy -18.523284 2.500107) (xy -18.523284 22.499924)
+			(xy -25.790023 22.499924) (xy -25.790023 0) (xy 24.210023 0)
+		)
+		(stroke
+			(width -0.000001)
+			(type solid)
+		)
+		(fill yes)
+		(layer "F.Cu")
+		(uuid "d5213481-9d93-4b12-ba5e-a17a92980ec6")
+	)
+	(fp_poly
+		(pts
+			(xy 24.210023 25.000015) (xy -25.790023 25.000015) (xy -25.790023 22.499924) (xy -18.523284 22.499924)
+			(xy -6.522987 22.499924) (xy -6.522987 2.500107) (xy -18.523284 2.500107) (xy -18.523284 22.499924)
+			(xy -25.790023 22.499924) (xy -25.790023 0) (xy 24.210023 0)
+		)
+		(stroke
+			(width -0.000001)
+			(type solid)
+		)
+		(fill yes)
+		(layer "F.Mask")
+		(uuid "c5bcfb40-451b-41ec-aefb-d8ccb619e7df")
+	)
+	(group ""
+		(uuid "075d2e0f-c8cd-4fe3-b359-c546af9edc50")
+		(members "d5213481-9d93-4b12-ba5e-a17a92980ec6")
+	)
+	(group ""
+		(uuid "29ee23d0-1955-4362-bceb-60f39201761c")
+		(members "10781457-6d8a-4bb3-840d-0a2c9a67fe5c")
+	)
+	(embedded_fonts no)
+)

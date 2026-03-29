@@ -1,0 +1,99 @@
+(footprint "2024_Flag_LightTheBadge"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(property "Reference" "REF**"
+		(at -6.65 3.6 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(hide yes)
+		(uuid "db654907-052c-4ac2-aed9-5aaf99b78998")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+		)
+	)
+	(property "Value" "2024_Flag_LightTheBadge"
+		(at 0 1 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "c19b5aec-5e0d-45b3-a5b3-f4586e16805c")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at -6.65 4.1 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "6377db4b-ffdb-4b54-82d0-c1c05deff3ca")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at -6.65 4.1 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "d58bb279-ac65-479c-9cb3-4c2f24a40974")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd)
+	(fp_text user "OzSecCTF{FIND_THE_LIGHT_THE_BADGE}"
+		(at -14.65 0 0)
+		(unlocked yes)
+		(layer "F.Cu")
+		(uuid "6ec5c770-76a6-40cd-ae80-4e0356dd7a41")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+			(justify left bottom)
+		)
+	)
+	(fp_text user "LIGHT_"
+		(at 0.77 0 0)
+		(unlocked yes)
+		(layer "F.Mask")
+		(uuid "bc39cb68-67c0-477e-aa31-f2075688e6e9")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+			(justify left bottom)
+		)
+	)
+	(fp_text user "THE_BADGE"
+		(at 5.64 0 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(uuid "7108e9bd-0b02-42b2-912c-08b6f7556ab7")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+			(justify left bottom)
+		)
+	)
+	(embedded_fonts no)
+)

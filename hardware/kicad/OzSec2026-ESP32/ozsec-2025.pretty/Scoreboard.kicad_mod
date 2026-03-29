@@ -1,0 +1,243 @@
+(footprint "Scoreboard"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(property "Reference" "REF**"
+		(at 0 -0.5 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(hide yes)
+		(uuid "4ae1696e-c1b9-495a-bf60-d8016f2af3ab")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+		)
+	)
+	(property "Value" "Scoreboard"
+		(at 0 1 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "1ab1ce98-8638-4d4d-bcca-ac1af56abfaa")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "9232fea9-5707-41cb-af95-523f3409f955")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "622cef96-79ce-4b2a-9d4f-350a9112a16e")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd)
+	(fp_line
+		(start -3.75 -4.75)
+		(end 13.9 -4.75)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "00088664-6864-4a8d-862f-04250e135328")
+	)
+	(fp_line
+		(start -0.3 -1.6)
+		(end -0.3 2.3)
+		(stroke
+			(width 0.3)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "5602c4db-47c4-4ed7-992e-223ef1cca595")
+	)
+	(fp_line
+		(start -0.3 2.3)
+		(end -0.3 -1.6)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "d9cdffd5-e46d-437b-a9b7-25377dc7de2a")
+	)
+	(fp_line
+		(start -0.3 6.25)
+		(end -0.3 2.3)
+		(stroke
+			(width 0.3)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "1d036afc-0709-4404-9fd0-1454d511e5e0")
+	)
+	(fp_line
+		(start 4.45 0.85)
+		(end 4.45 -1.65)
+		(stroke
+			(width 0.3)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "e210b3b9-301a-4c86-ad88-0a5f8e3c4ff6")
+	)
+	(fp_line
+		(start 4.45 0.85)
+		(end 4.45 6.35)
+		(stroke
+			(width 0.3)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "5cd7f71e-cc97-4c78-9dd3-ebfa363bda80")
+	)
+	(fp_line
+		(start 9.2 0.9)
+		(end 9.2 -1.6)
+		(stroke
+			(width 0.3)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "f3d70508-1ce8-4181-9766-46e10c9a2b3a")
+	)
+	(fp_line
+		(start 9.2 0.9)
+		(end 9.2 6.4)
+		(stroke
+			(width 0.3)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "f90a1c04-7c84-4810-a354-f3415ee38618")
+	)
+	(fp_rect
+		(start -5.65 -4.75)
+		(end -3.75 -1.6)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill yes)
+		(layer "F.SilkS")
+		(uuid "38244b80-022d-4850-ad8d-0ec1b42c362b")
+	)
+	(fp_rect
+		(start -5.55 -1.65)
+		(end 14.45 6.35)
+		(stroke
+			(width 0.3)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.SilkS")
+		(uuid "48c47e58-7320-43bd-ab80-7b7e0f8b716f")
+	)
+	(fp_rect
+		(start 12.9 -4.75)
+		(end 14.55 -1.65)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill yes)
+		(layer "F.SilkS")
+		(uuid "e9137696-61ef-4c12-a9c1-4625bb15dc68")
+	)
+	(fp_text user "2"
+		(at 4.5 6.15 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(uuid "0a544973-1132-4ac3-ac63-131a5276cb57")
+		(effects
+			(font
+				(size 1.5 1.5)
+				(thickness 0.3)
+				(bold yes)
+			)
+			(justify left bottom)
+		)
+	)
+	(fp_text user "1"
+		(at 9.2 6.15 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(uuid "0b0b4de9-feb3-4132-9292-b8214c6ec772")
+		(effects
+			(font
+				(size 1.5 1.5)
+				(thickness 0.3)
+				(bold yes)
+			)
+			(justify left bottom)
+		)
+	)
+	(fp_text user "8"
+		(at -5.55 6.15 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(uuid "1097eefd-af13-4d97-a39a-148e0125f54a")
+		(effects
+			(font
+				(size 1.5 1.5)
+				(thickness 0.3)
+				(bold yes)
+			)
+			(justify left bottom)
+		)
+	)
+	(fp_text user "4"
+		(at -0.3 6.15 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(uuid "444bb66d-b14e-4dac-9be5-fc4827b032a4")
+		(effects
+			(font
+				(size 1.5 1.5)
+				(thickness 0.3)
+				(bold yes)
+			)
+			(justify left bottom)
+		)
+	)
+	(fp_text user "scoreboard"
+		(at -3.95 -2 0)
+		(unlocked yes)
+		(layer "F.SilkS" knockout)
+		(uuid "dd27a582-9be9-4d60-9083-7c6bda463f2e")
+		(effects
+			(font
+				(size 2 2)
+				(thickness 0.5)
+				(bold yes)
+			)
+			(justify left bottom)
+		)
+	)
+	(embedded_fonts no)
+)

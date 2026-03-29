@@ -1,0 +1,102 @@
+(footprint "BadgeHolder"
+	(version 20240108)
+	(generator "pcbnew")
+	(generator_version "8.0")
+	(layer "F.Cu")
+	(property "Reference" "REF**"
+		(at 0 -3.8 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(uuid "f419d45a-997b-4aef-be3c-00c2fd45f5c5")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+		)
+	)
+	(property "Value" "BadgeHolder"
+		(at 0 1 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(uuid "08a11b6b-b118-47ef-967f-558ed7a90e8a")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Footprint" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "37c9f41e-8237-4484-bdf8-db806ff99eb2")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "3ff0b221-82e7-4485-83bd-bc6d7a9b5948")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "4090b5f9-e28f-4ec1-b327-86d818901fc4")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr through_hole)
+	(fp_text user "${REFERENCE}"
+		(at 0 2.5 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(uuid "3bebc982-5de4-4752-9aa5-14a5d6abdf43")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "" thru_hole circle
+		(at -0.05 0)
+		(size 5 5)
+		(drill 4.5)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "8f2b75b5-b930-43ea-b45a-b08698db2cb9")
+	)
+	(pad "" thru_hole oval
+		(at -0.05 2.25)
+		(size 16.5 5)
+		(drill oval 16 4.5)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "3694da01-86ca-4d4b-8416-0f399c79deed")
+	)
+	(group ""
+		(uuid "b39a89f9-1309-4faf-afb6-f977e026475d")
+		(members "3694da01-86ca-4d4b-8416-0f399c79deed" "8f2b75b5-b930-43ea-b45a-b08698db2cb9")
+	)
+)
