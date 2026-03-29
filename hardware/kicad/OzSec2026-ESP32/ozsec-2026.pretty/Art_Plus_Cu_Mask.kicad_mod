@@ -1,0 +1,92 @@
+(footprint "Art_Plus_Cu_Mask"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(property "Reference" "REF**"
+		(at 0 -0.5 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(hide yes)
+		(uuid "7fac5004-e478-4254-ab91-b317ba541cb0")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+		)
+	)
+	(property "Value" "Art_Plus_Cu_Mask"
+		(at 0 1 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "58d910fe-702d-4fb5-accf-6091934fdb15")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "09b7210d-6f89-4257-8043-cf8bcd437707")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "3fa7a068-c077-4383-8e2e-1eccef48d068")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr exclude_from_pos_files exclude_from_bom allow_missing_courtyard)
+	(fp_poly
+		(pts
+			(xy 1.000667 -4.676) (xy 1.000667 -0.866) (xy 4.810667 -0.866) (xy 8.620667 -0.866) (xy 8.620667 0.192333)
+			(xy 8.620667 1.250667) (xy 4.810667 1.250667) (xy 1.000667 1.250667) (xy 1.000667 5.060667) (xy 1.000667 8.870667)
+			(xy -0.057667 8.870667) (xy -1.116 8.870667) (xy -1.116 5.060667) (xy -1.116 1.250667) (xy -4.926 1.250667)
+			(xy -8.736 1.250667) (xy -8.736 0.192333) (xy -8.736 -0.866) (xy -4.926 -0.866) (xy -1.116 -0.866)
+			(xy -1.116 -4.676) (xy -1.116 -8.486) (xy -0.057667 -8.486) (xy 1.000667 -8.486)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill yes)
+		(layer "F.Cu")
+		(uuid "a806bdad-4236-4caf-8b9e-4742ec9d8c14")
+	)
+	(fp_poly
+		(pts
+			(xy 0.966667 -4.66) (xy 0.966667 -0.85) (xy 4.776667 -0.85) (xy 8.586667 -0.85) (xy 8.586667 0.208333)
+			(xy 8.586667 1.266667) (xy 4.776667 1.266667) (xy 0.966667 1.266667) (xy 0.966667 5.076667) (xy 0.966667 8.886667)
+			(xy -0.091667 8.886667) (xy -1.15 8.886667) (xy -1.15 5.076667) (xy -1.15 1.266667) (xy -4.96 1.266667)
+			(xy -8.77 1.266667) (xy -8.77 0.208333) (xy -8.77 -0.85) (xy -4.96 -0.85) (xy -1.15 -0.85) (xy -1.15 -4.66)
+			(xy -1.15 -8.47) (xy -0.091667 -8.47) (xy 0.966667 -8.47)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill yes)
+		(layer "F.Mask")
+		(uuid "8bea9caf-9865-4ccf-8a12-edb3754af471")
+	)
+	(embedded_fonts no)
+)
