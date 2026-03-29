@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Render Browser — OzSec2026-ESP32</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0a0c0f;
+      --surface:  #111418;
+      --border:   #1e2329;
+      --accent:   #00e5a0;
+      --text:     #e8eaed;
+      --muted:    #6b7280;
+      --card-bg:  #13181f;
+      --radius:   8px;
+    }
+
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent, transparent 2px,
+        rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 4px
+      );
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    /* ── Header ── */
+    header {
+      padding: 1.75rem 2rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .header-title {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+    }
+    .header-title h1 {
+      font-family: 'Courier Prime', 'Courier New', monospace;
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      color: var(--text);
+    }
+    .header-title .sep {
+      color: var(--accent);
+      font-family: 'Courier Prime', monospace;
+      font-size: 1.35rem;
+    }
+    .header-title .board-name {
+      font-family: 'Courier Prime', 'Courier New', monospace;
+      font-size: 1.35rem;
+      font-weight: 400;
+      color: var(--muted);
+    }
+    .pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      background: var(--border);
+      padding: 0.2rem 0.65rem;
+      border-radius: 999px;
+    }
+
+    /* ── Layout ── */
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 860px) {
+      .layout {
+        grid-template-columns: 1fr 1fr;
+        height: calc(100vh - 69px);
+      }
+      .detail, .overview {
+        overflow-y: auto;
+        height: 100%;
+      }
+      .detail { border-right: 1px solid var(--border); }
+    }
+
+    /* ── Detail panel ── */
+    .detail {
+      padding: 1.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    @media (min-width: 860px) { .detail { border-bottom: none; } }
+
+    .controls {
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+    .select-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 200px;
+    }
+    .select-wrap::after {
+      content: '▾';
+      position: absolute;
+      right: 0.9rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--accent);
+      pointer-events: none;
+    }
+    select {
+      width: 100%;
+      appearance: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      padding: 0.6rem 2.2rem 0.6rem 0.9rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+    select:focus { outline: none; border-color: var(--accent); }
+
+    .view-tabs { display: flex; gap: 0.35rem; }
+    .view-tab {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      transition: all 0.15s;
+    }
+    .view-tab:hover { border-color: var(--accent); color: var(--accent); }
+    .view-tab.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #000;
+      font-weight: 700;
+    }
+
+    .img-frame {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 260px;
+    }
+    .img-frame img {
+      width: 100%;
+      height: auto;
+      max-height: 460px;
+      object-fit: contain;
+      display: block;
+      transition: opacity 0.18s;
+    }
+    .img-frame img.fade { opacity: 0; }
+
+    .meta {
+      margin-top: 0.9rem;
+      display: flex;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+    .meta span b { color: var(--text); font-weight: 600; }
+
+    /* ── Overview ── */
+    .overview { padding: 1.75rem; }
+    .overview h2 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+    .thumb-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 0.65rem;
+    }
+    .thumb-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+    }
+    .thumb-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .thumb-card.active {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent);
+    }
+    .thumb-img-wrap {
+      aspect-ratio: 4/3;
+      overflow: hidden;
+      background: #0d1117;
+    }
+    .thumb-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.2s;
+    }
+    .thumb-card:hover .thumb-img-wrap img { transform: scale(1.05); }
+    .thumb-label {
+      padding: 0.4rem 0.55rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-title">
+    <h1>Render Browser</h1>
+    <span class="sep">/</span>
+    <span class="board-name">OzSec2026-ESP32</span>
+  </div>
+  <span class="pill">14 variants &middot; 2 views each</span>
+</header>
+
+<div class="layout">
+
+  <section class="detail">
+    <div class="controls">
+      <div class="select-wrap">
+        <select id="variantSelect" onchange="selectVariant(this.value)">
+          <option value="Black_Gold">Black mask / White silk / ENIG (Gold)</option>
+          <option value="Black_Silver">Black mask / White silk / HASL (Silver)</option>
+          <option value="Green_Silver">Green mask / White silk / HASL (Silver)</option>
+          <option value="Purple_Silver">Purple mask / White silk / HASL (Silver)</option>
+          <option value="Red_Silver">Red mask / White silk / HASL (Silver)</option>
+          <option value="Yellow_Silver">Yellow mask / White silk / HASL (Silver)</option>
+          <option value="Blue_Silver">Blue mask / White silk / HASL (Silver)</option>
+          <option value="White_Silver">White mask / Black silk / HASL (Silver)</option>
+          <option value="Green_Gold">Green mask / White silk / ENIG (Gold)</option>
+          <option value="Purple_Gold">Purple mask / White silk / ENIG (Gold)</option>
+          <option value="Red_Gold">Red mask / White silk / ENIG (Gold)</option>
+          <option value="Yellow_Gold">Yellow mask / White silk / ENIG (Gold)</option>
+          <option value="Blue_Gold">Blue mask / White silk / ENIG (Gold)</option>
+          <option value="White_Gold">White mask / Black silk / ENIG (Gold)</option>
+        </select>
+      </div>
+      <div class="view-tabs">
+        <button class="view-tab" data-view="front" onclick="selectView(this)">Front</button>
+        <button class="view-tab" data-view="back" onclick="selectView(this)">Back</button>
+      </div>
+    </div>
+    <div class="img-frame">
+      <img id="detailImg" src="" alt="PCB render">
+    </div>
+    <div class="meta" id="detailMeta"></div>
+  </section>
+
+  <section class="overview">
+    <h2>All variants — front view</h2>
+    <div class="thumb-grid">
+      <div class="thumb-card" data-name="Black_Gold" onclick="selectVariant('Black_Gold')" title="Black mask / White silk / ENIG (Gold)"><div class="thumb-img-wrap"><img src="OzSec2026-ESP32_Black_Gold_front.png" alt="Black mask / White silk / ENIG (Gold)" loading="lazy"></div><div class="thumb-label">Black Gold</div></div>
+      <div class="thumb-card" data-name="Black_Silver" onclick="selectVariant('Black_Silver')" title="Black mask / White silk / HASL (Silver)"><div class="thumb-img-wrap"><img src="OzSec2026-ESP32_Black_Silver_front.png" alt="Black mask / White silk / HASL (Silver)" loading="lazy"></div><div class="thumb-label">Black Silver</div></div>
+      <div class="thumb-card" data-name="Green_Silver" onclick="selectVariant('Green_Silver')" title="Green mask / White silk / HASL (Silver)"><div class="thumb-img-wrap"><img src="OzSec2026-ESP32_Green_Silver_front.png" alt="Green mask / White silk / HASL (Silver)" loading="lazy"></div><div class="thumb-label">Green Silver</div></div>
+      <div class="thumb-card" data-name="Purple_Silver" onclick="selectVariant('Purple_Silver')" title="Purple mask / White silk / HASL (Silver)"><div class="thumb-img-wrap"><img src="OzSec2026-ESP32_Purple_Silver_front.png" alt="Purple mask / White silk / HASL (Silver)" loading="lazy"></div><div class="thumb-label">Purple Silver</div></div>
+      <div class="thumb-card" data-name="Red_Silver" onclick="selectVariant('Red_Silver')" title="Red mask / White silk / HASL (Silver)"><div class="thumb-img-wrap"><img src="OzSec2026-ESP32_Red_Silver_front.png" alt="Red mask / White silk / HASL (Silver)" loading="lazy"></div><div class="thumb-label">Red Silver</div></div>
+      <div class="thumb-card" data-name="Yellow_Silver" onclick="selectVariant('Yellow_Silver')" title="Yellow mask / White silk / HASL (Silver)"><div class="thumb-img-wrap"><img src="OzSec2026-ESP32_Yellow_Silver_front.png" alt="Yellow mask / White silk / HASL (Silver)" loading="lazy"></div><div class="thumb-label">Yellow Silver</div></div>
+      <div class="thumb-card" data-name="Blue_Silver" onclick="selectVariant('Blue_Silver')" title="Blue mask / White silk / HASL (Silver)"><div class="thumb-img-wrap"><img src="OzSec2026-ESP32_Blue_Silver_front.png" alt="Blue mask / White silk / HASL (Silver)" loading="lazy"></div><div class="thumb-label">Blue Silver</div></div>
+      <div class="thumb-card" data-name="White_Silver" onclick="selectVariant('White_Silver')" title="White mask / Black silk / HASL (Silver)"><div class="thumb-img-wrap"><img src="OzSec2026-ESP32_White_Silver_front.png" alt="White mask / Black silk / HASL (Silver)" loading="lazy"></div><div class="thumb-label">White Silver</div></div>
+      <div class="thumb-card" data-name="Green_Gold" onclick="selectVariant('Green_Gold')" title="Green mask / White silk / ENIG (Gold)"><div class="thumb-img-wrap"><img src="OzSec2026-ESP32_Green_Gold_front.png" alt="Green mask / White silk / ENIG (Gold)" loading="lazy"></div><div class="thumb-label">Green Gold</div></div>
+      <div class="thumb-card" data-name="Purple_Gold" onclick="selectVariant('Purple_Gold')" title="Purple mask / White silk / ENIG (Gold)"><div class="thumb-img-wrap"><img src="OzSec2026-ESP32_Purple_Gold_front.png" alt="Purple mask / White silk / ENIG (Gold)" loading="lazy"></div><div class="thumb-label">Purple Gold</div></div>
+      <div class="thumb-card" data-name="Red_Gold" onclick="selectVariant('Red_Gold')" title="Red mask / White silk / ENIG (Gold)"><div class="thumb-img-wrap"><img src="OzSec2026-ESP32_Red_Gold_front.png" alt="Red mask / White silk / ENIG (Gold)" loading="lazy"></div><div class="thumb-label">Red Gold</div></div>
+      <div class="thumb-card" data-name="Yellow_Gold" onclick="selectVariant('Yellow_Gold')" title="Yellow mask / White silk / ENIG (Gold)"><div class="thumb-img-wrap"><img src="OzSec2026-ESP32_Yellow_Gold_front.png" alt="Yellow mask / White silk / ENIG (Gold)" loading="lazy"></div><div class="thumb-label">Yellow Gold</div></div>
+      <div class="thumb-card" data-name="Blue_Gold" onclick="selectVariant('Blue_Gold')" title="Blue mask / White silk / ENIG (Gold)"><div class="thumb-img-wrap"><img src="OzSec2026-ESP32_Blue_Gold_front.png" alt="Blue mask / White silk / ENIG (Gold)" loading="lazy"></div><div class="thumb-label">Blue Gold</div></div>
+      <div class="thumb-card" data-name="White_Gold" onclick="selectVariant('White_Gold')" title="White mask / Black silk / ENIG (Gold)"><div class="thumb-img-wrap"><img src="OzSec2026-ESP32_White_Gold_front.png" alt="White mask / Black silk / ENIG (Gold)" loading="lazy"></div><div class="thumb-label">White Gold</div></div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  const VARIANTS = [
+  {
+    "name": "Black_Gold",
+    "label": "Black mask / White silk / ENIG (Gold)",
+    "images": {
+      "front": "OzSec2026-ESP32_Black_Gold_front.png",
+      "back": "OzSec2026-ESP32_Black_Gold_back.png"
+    }
+  },
+  {
+    "name": "Black_Silver",
+    "label": "Black mask / White silk / HASL (Silver)",
+    "images": {
+      "front": "OzSec2026-ESP32_Black_Silver_front.png",
+      "back": "OzSec2026-ESP32_Black_Silver_back.png"
+    }
+  },
+  {
+    "name": "Green_Silver",
+    "label": "Green mask / White silk / HASL (Silver)",
+    "images": {
+      "front": "OzSec2026-ESP32_Green_Silver_front.png",
+      "back": "OzSec2026-ESP32_Green_Silver_back.png"
+    }
+  },
+  {
+    "name": "Purple_Silver",
+    "label": "Purple mask / White silk / HASL (Silver)",
+    "images": {
+      "front": "OzSec2026-ESP32_Purple_Silver_front.png",
+      "back": "OzSec2026-ESP32_Purple_Silver_back.png"
+    }
+  },
+  {
+    "name": "Red_Silver",
+    "label": "Red mask / White silk / HASL (Silver)",
+    "images": {
+      "front": "OzSec2026-ESP32_Red_Silver_front.png",
+      "back": "OzSec2026-ESP32_Red_Silver_back.png"
+    }
+  },
+  {
+    "name": "Yellow_Silver",
+    "label": "Yellow mask / White silk / HASL (Silver)",
+    "images": {
+      "front": "OzSec2026-ESP32_Yellow_Silver_front.png",
+      "back": "OzSec2026-ESP32_Yellow_Silver_back.png"
+    }
+  },
+  {
+    "name": "Blue_Silver",
+    "label": "Blue mask / White silk / HASL (Silver)",
+    "images": {
+      "front": "OzSec2026-ESP32_Blue_Silver_front.png",
+      "back": "OzSec2026-ESP32_Blue_Silver_back.png"
+    }
+  },
+  {
+    "name": "White_Silver",
+    "label": "White mask / Black silk / HASL (Silver)",
+    "images": {
+      "front": "OzSec2026-ESP32_White_Silver_front.png",
+      "back": "OzSec2026-ESP32_White_Silver_back.png"
+    }
+  },
+  {
+    "name": "Green_Gold",
+    "label": "Green mask / White silk / ENIG (Gold)",
+    "images": {
+      "front": "OzSec2026-ESP32_Green_Gold_front.png",
+      "back": "OzSec2026-ESP32_Green_Gold_back.png"
+    }
+  },
+  {
+    "name": "Purple_Gold",
+    "label": "Purple mask / White silk / ENIG (Gold)",
+    "images": {
+      "front": "OzSec2026-ESP32_Purple_Gold_front.png",
+      "back": "OzSec2026-ESP32_Purple_Gold_back.png"
+    }
+  },
+  {
+    "name": "Red_Gold",
+    "label": "Red mask / White silk / ENIG (Gold)",
+    "images": {
+      "front": "OzSec2026-ESP32_Red_Gold_front.png",
+      "back": "OzSec2026-ESP32_Red_Gold_back.png"
+    }
+  },
+  {
+    "name": "Yellow_Gold",
+    "label": "Yellow mask / White silk / ENIG (Gold)",
+    "images": {
+      "front": "OzSec2026-ESP32_Yellow_Gold_front.png",
+      "back": "OzSec2026-ESP32_Yellow_Gold_back.png"
+    }
+  },
+  {
+    "name": "Blue_Gold",
+    "label": "Blue mask / White silk / ENIG (Gold)",
+    "images": {
+      "front": "OzSec2026-ESP32_Blue_Gold_front.png",
+      "back": "OzSec2026-ESP32_Blue_Gold_back.png"
+    }
+  },
+  {
+    "name": "White_Gold",
+    "label": "White mask / Black silk / ENIG (Gold)",
+    "images": {
+      "front": "OzSec2026-ESP32_White_Gold_front.png",
+      "back": "OzSec2026-ESP32_White_Gold_back.png"
+    }
+  }
+];
+
+  let currentName = VARIANTS[0].name;
+  let currentView = 'front';
+
+  function byName(n) { return VARIANTS.find(v => v.name === n); }
+
+  function selectVariant(name) {
+    currentName = name;
+    document.getElementById('variantSelect').value = name;
+    updateDetail();
+    updateThumbActive();
+  }
+
+  function selectView(btn) {
+    document.querySelectorAll('.view-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentView = btn.dataset.view;
+    updateDetail();
+  }
+
+  function updateDetail() {
+    const v   = byName(currentName);
+    const img = document.getElementById('detailImg');
+    img.classList.add('fade');
+    setTimeout(() => {
+      img.src = v.images[currentView] || '';
+      img.alt = v.label + ' — ' + currentView;
+      img.onload = () => img.classList.remove('fade');
+    }, 80);
+
+    const parts = v.label.split(' / ');
+    document.getElementById('detailMeta').innerHTML =
+      parts.map(p => {
+        const words = p.trim().split(' ');
+        const key   = words[0];
+        const val   = words.slice(1).join(' ');
+        return `<span><b>${key}</b> ${val}</span>`;
+      }).join('');
+  }
+
+  function updateThumbActive() {
+    document.querySelectorAll('.thumb-card').forEach(card => {
+      card.classList.toggle('active', card.dataset.name === currentName);
+    });
+  }
+
+  document.querySelector('.view-tab').classList.add('active');
+  selectVariant(VARIANTS[0].name);
+</script>
+
+</body>
+</html>
