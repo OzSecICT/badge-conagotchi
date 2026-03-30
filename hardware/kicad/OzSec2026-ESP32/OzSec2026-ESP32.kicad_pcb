@@ -5078,7 +5078,7 @@
 		(descr "Through hole angled pin header, 1x03, 2.54mm pitch, 6mm pin length, single row")
 		(tags "Through hole angled pin header THT 1x03 2.54mm single row")
 		(property "Reference" "J5"
-			(at 4.385 -2.27 180)
+			(at 0.375 7.405 180)
 			(layer "F.SilkS")
 			(uuid "9efe9505-7e56-4abf-83a8-09537767c7ed")
 			(effects
@@ -19587,6 +19587,19 @@
 			(justify left bottom)
 		)
 	)
+	(gr_text "LINK TX"
+		(at 126 93 0)
+		(layer "F.SilkS")
+		(uuid "22c0c8cc-810d-4612-a211-4ba2b2f1ca06")
+		(effects
+			(font
+				(size 1.5 1.5)
+				(thickness 0.3)
+				(bold yes)
+			)
+			(justify left bottom)
+		)
+	)
 	(gr_text " \\|/\n IR"
 		(at 138.525 64.15 45)
 		(layer "F.SilkS")
@@ -19641,8 +19654,21 @@
 			)
 		)
 	)
-	(gr_text "LINK"
-		(at 127.4 82.4 0)
+	(gr_text "GND"
+		(at 137 88.5 0)
+		(layer "F.SilkS")
+		(uuid "d86b8239-c04c-47e9-bab6-370526f897db")
+		(effects
+			(font
+				(size 1.5 1.5)
+				(thickness 0.3)
+				(bold yes)
+			)
+			(justify left bottom)
+		)
+	)
+	(gr_text "LINK RX"
+		(at 126 82.4 0)
 		(layer "F.SilkS")
 		(uuid "fbfc5d8f-3e12-4602-b023-c01ed6cdf5e4")
 		(effects
