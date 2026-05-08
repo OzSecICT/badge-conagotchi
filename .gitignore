@@ -22,3 +22,7 @@ fp-info-cache
 *.ses
 __pycache__
 .idea/*
+# ESP-IDF generated files
+hw-test/sdkconfig
+hw-test/sdkconfig.old
+hw-test/build/
