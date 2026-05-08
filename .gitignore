@@ -26,3 +26,4 @@ __pycache__
 hw-test/sdkconfig
 hw-test/sdkconfig.old
 hw-test/build/
+hw-test/.cache/
