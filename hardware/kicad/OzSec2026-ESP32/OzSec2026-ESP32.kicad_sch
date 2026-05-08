@@ -17106,7 +17106,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "1K"
+		(property "Value" "100"
 			(at 87.63 121.9199 0)
 			(effects
 				(font
@@ -17142,7 +17142,7 @@
 				(hide yes)
 			)
 		)
-		(property "Link" "https://www.lcsc.com/product-detail/C17513.html"
+		(property "Link" "https://www.lcsc.com/product-detail/C17408.html"
 			(at 85.09 120.65 0)
 			(effects
 				(font
@@ -17151,7 +17151,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C17513"
+		(property "LCSC" "C17408"
 			(at 85.09 120.65 0)
 			(effects
 				(font

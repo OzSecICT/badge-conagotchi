@@ -9917,7 +9917,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Value" "1K"
+		(property "Value" "100"
 			(at 0 -1.65 0)
 			(layer "B.Fab")
 			(uuid "2e5a0569-301b-4d39-8bfc-4c1443177784")
@@ -9955,7 +9955,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Link" "https://www.lcsc.com/product-detail/C17513.html"
+		(property "Link" "https://www.lcsc.com/product-detail/C17408.html"
 			(at 0 0 180)
 			(unlocked yes)
 			(layer "B.Fab")
@@ -9969,7 +9969,7 @@
 				(justify mirror)
 			)
 		)
-		(property "LCSC" "C17513"
+		(property "LCSC" "C17408"
 			(at 0 0 180)
 			(unlocked yes)
 			(layer "B.Fab")
