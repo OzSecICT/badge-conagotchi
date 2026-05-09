@@ -27,3 +27,4 @@ hw-test/sdkconfig
 hw-test/sdkconfig.old
 hw-test/build/
 hw-test/.cache/
+hardware/kicad/OzSec2026-ESP32/.history/
