@@ -1,0 +1,9 @@
+{
+    "include": ["source"],
+    "stubPath": "typings",
+    "pythonVersion": "3.10",
+    "typeCheckingMode": "basic",
+    "reportMissingModuleSource": false,
+    "reportUndefinedVariable": "warning",
+    "reportMissingImports": "warning"
+}
