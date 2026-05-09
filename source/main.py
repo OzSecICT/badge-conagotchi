@@ -4,7 +4,6 @@ import gc
 import display as disp
 from buttons import Buttons, START, SELECT, LEFT, RIGHT, BOOT
 from leds import Leds
-from wifi import Wifi
 
 
 async def main():
@@ -14,13 +13,9 @@ async def main():
     display = disp.init()
     buttons = Buttons()
     leds    = Leds()
-    wifi    = Wifi()
 
     gc.collect()
     print(f"Free RAM: {gc.mem_free()} bytes")
-
-    # ── WiFi (non-blocking, continues in background) ───────────────────────
-    asyncio.create_task(wifi.connect())
 
     # ── Main event loop ────────────────────────────────────────────────────
     print("Badge ready.")

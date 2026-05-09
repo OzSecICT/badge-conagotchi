@@ -6,6 +6,7 @@ from config import WIFI_SSID, WIFI_PASSWORD, WIFI_TIMEOUT_S
 class Wifi:
     def __init__(self):
         self._wlan = network.WLAN(network.STA_IF)
+        self._wlan.active(False)
 
     async def connect(self) -> bool:
         """Attempt to connect; return True on success."""
