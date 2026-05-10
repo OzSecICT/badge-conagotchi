@@ -4,15 +4,15 @@
         {
             "label": "Flash Firmware",
             "type": "shell",
-            "command": "esptool.py",
+            "command": "esptool",
             "args": [
                 "--chip", "esp32s3",
-                "--before", "default_reset",
-                "--after", "hard_reset",
-                "write_flash",
+                "--before", "default-reset",
+                "--after", "hard-reset",
+                "write-flash",
                 "-z",
                 "0x0",
-                "firmware/ESP32_GENERIC_S3-20251209-v1.27.0.bin"
+                "firmware/ESP32_GENERIC_S3-SPIRAM_OCT-20251209-v1.27.0.bin"
             ],
             "options": {
                 "shell": { "executable": "/bin/bash", "args": ["-lc"] }
