@@ -24,5 +24,5 @@ def init() -> gc9a01.GC9A01:
         reset=Pin(PIN_DISP_RST, Pin.OUT),
         rotation=0,
     )
-    display.fill(gc9a01.YELLOW)
+    display.fill(gc9a01.BLACK)
     return display

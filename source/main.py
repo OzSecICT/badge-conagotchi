@@ -1,16 +1,16 @@
 import asyncio
 import gc
-from time import ticks_ms
 
 import display as disp
-from buttons import Buttons, START, SELECT, LEFT, RIGHT, BOOT
+from buttons import Buttons
 from leds import Leds
+from screen_manager import ScreenManager
+from screens.splash import SplashScreen
 
 
 async def main():
     print("Badge booting...")
 
-    # ── Hardware init ──────────────────────────────────────────────────────
     display = disp.init()
     buttons = Buttons()
     leds    = Leds()
@@ -18,28 +18,21 @@ async def main():
     gc.collect()
     print(f"Free RAM: {gc.mem_free()} bytes")
 
-    # ── Main event loop ────────────────────────────────────────────────────
+    mgr = ScreenManager(display, leds, buttons)
+    await mgr.boot(SplashScreen())
+
+    async def button_loop():
+        while True:
+            btn = await buttons.get()
+            mgr.handle_button(btn)
+
+    async def update_loop():
+        while True:
+            await mgr.update()
+            await asyncio.sleep_ms(33)   # ~30 fps
+
     print("Badge ready.")
-    while True:
-        btn = await buttons.get()
-        print(f"[{ticks_ms()}] Button: {btn}")
-
-        if btn == START:
-            pass  # TODO: confirm / enter menu item
-
-        elif btn == SELECT:
-            pass  # TODO: open menu / back
-
-        elif btn == LEFT:
-            pass  # TODO: navigate left
-
-        elif btn == RIGHT:
-            pass  # TODO: navigate right
-
-        elif btn == BOOT:
-            pass  # TODO: reserved / debug
-
-        gc.collect()
+    await asyncio.gather(button_loop(), update_loop())
 
 
 asyncio.run(main())

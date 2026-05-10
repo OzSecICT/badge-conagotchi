@@ -34,18 +34,24 @@ class Buttons:
 
         for name, pin in self._pins.items():
             pin.irq(
-                trigger=Pin.IRQ_FALLING | Pin.IRQ_RISING,
+                trigger=Pin.IRQ_FALLING,
                 handler=lambda p, n=name: self._isr(n),
             )
 
     def _isr(self, name):
         now = time.ticks_ms()
+        if self._pins[name].value() != 0:
+            return  # ignore rising edge entirely — only falling edges count
         last = self._last_ms[name]
-        self._last_ms[name] = now  # always update on any edge to reset the window
-        if self._pins[name].value() == 0:  # only register when pin is confirmed LOW
-            if time.ticks_diff(now, last) >= DEBOUNCE_MS:
-                if len(self._buf) < _BUF_MAX:
-                    self._buf.append(name)
+        self._last_ms[name] = now  # update timer on every falling edge (not rising)
+        if time.ticks_diff(now, last) >= DEBOUNCE_MS:
+            if len(self._buf) < _BUF_MAX:
+                self._buf.append(name)
+
+    def clear(self) -> None:
+        """Discard all queued events. Call after screen transitions to prevent
+        the triggering press from being re-delivered to the incoming screen."""
+        self._buf.clear()
 
     async def get(self):
         """Wait for and return the next button name."""
