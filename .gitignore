@@ -34,3 +34,4 @@ typings/*.dist-info/
 typings/_mpy_shed/
 typings/stubs/
 typings/.lock
+source/__pycache__/
