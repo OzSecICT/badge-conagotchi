@@ -34,16 +34,18 @@ class Buttons:
 
         for name, pin in self._pins.items():
             pin.irq(
-                trigger=Pin.IRQ_FALLING,
+                trigger=Pin.IRQ_FALLING | Pin.IRQ_RISING,
                 handler=lambda p, n=name: self._isr(n),
             )
 
     def _isr(self, name):
         now = time.ticks_ms()
-        if time.ticks_diff(now, self._last_ms[name]) >= DEBOUNCE_MS:
-            self._last_ms[name] = now
-            if len(self._buf) < _BUF_MAX:
-                self._buf.append(name)
+        last = self._last_ms[name]
+        self._last_ms[name] = now  # always update on any edge to reset the window
+        if self._pins[name].value() == 0:  # only register when pin is confirmed LOW
+            if time.ticks_diff(now, last) >= DEBOUNCE_MS:
+                if len(self._buf) < _BUF_MAX:
+                    self._buf.append(name)
 
     async def get(self):
         """Wait for and return the next button name."""
