@@ -15,7 +15,7 @@ PIN_BTN_START       = 9
 PIN_BTN_SELECT      = 21
 PIN_BTN_RIGHT       = 46
 PIN_BTN_LEFT        = 47
-DEBOUNCE_MS         = 50
+DEBOUNCE_MS         = 100
 
 # ── SAO expansion GPIOs ───────────────────────────────────────────────────────
 PIN_SAO_GPIO1       = 38

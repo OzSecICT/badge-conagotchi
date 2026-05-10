@@ -1,5 +1,6 @@
 import asyncio
 import gc
+from time import ticks_ms
 
 import display as disp
 from buttons import Buttons, START, SELECT, LEFT, RIGHT, BOOT
@@ -21,7 +22,7 @@ async def main():
     print("Badge ready.")
     while True:
         btn = await buttons.get()
-        print(f"Button: {btn}")
+        print(f"[{ticks_ms()}] Button: {btn}")
 
         if btn == START:
             pass  # TODO: confirm / enter menu item
