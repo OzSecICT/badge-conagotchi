@@ -1,5 +1,4 @@
 import asyncio
-from asyncio import Queue
 from machine import Pin
 import time
 from config import (
@@ -7,7 +6,6 @@ from config import (
     PIN_BTN_RIGHT, PIN_BTN_LEFT, DEBOUNCE_MS,
 )
 
-# Named constants so callers use Buttons.START rather than string literals.
 BOOT   = "BOOT"
 START  = "START"
 SELECT = "SELECT"
@@ -22,6 +20,8 @@ _PINS = {
     LEFT:   PIN_BTN_LEFT,
 }
 
+_BUF_MAX = 8
+
 
 class Buttons:
     def __init__(self):
@@ -30,7 +30,7 @@ class Buttons:
             for name, pin in _PINS.items()
         }
         self._last_ms = {name: 0 for name in _PINS}
-        self._queue   = Queue()
+        self._buf = []
 
         for name, pin in self._pins.items():
             pin.irq(
@@ -42,14 +42,14 @@ class Buttons:
         now = time.ticks_ms()
         if time.ticks_diff(now, self._last_ms[name]) >= DEBOUNCE_MS:
             self._last_ms[name] = now
-            try:
-                self._queue.put_nowait(name)
-            except Exception:
-                pass  # queue full — drop the event
+            if len(self._buf) < _BUF_MAX:
+                self._buf.append(name)
 
     async def get(self):
         """Wait for and return the next button name."""
-        return await self._queue.get()
+        while not self._buf:
+            await asyncio.sleep_ms(10)
+        return self._buf.pop(0)
 
     def pressed(self, name):
         """Return True if the button is currently held down."""
