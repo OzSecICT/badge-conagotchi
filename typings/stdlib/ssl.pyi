@@ -1,7 +1,7 @@
 """
 TLS/SSL wrapper for socket objects.
 
-MicroPython module: https://docs.micropython.org/en/v1.23.0/library/ssl.html
+MicroPython module: https://docs.micropython.org/en/v1.27.0/library/ssl.html
 
 CPython module: :mod:`python:ssl` https://docs.python.org/3/library/ssl.html .
 
@@ -41,13 +41,14 @@ from _ssl import (
 from _typeshed import Incomplete, ReadableBuffer, StrOrBytesPath, WriteableBuffer
 from collections.abc import Callable, Iterable
 from typing import Any, Literal, NamedTuple, TypedDict, overload
-from typing_extensions import Never, Self, TypeAlias
-from stdlib.ssl import *
+from typing_extensions import Awaitable, TypeVar, Never, Self, TypeAlias
+from _mpy_shed import StrOrBytesPath, mp_available
+from tls import *
 
 if sys.version_info >= (3, 13):
     from _ssl import HAS_PSK as HAS_PSK
 
-if sys.version_info < (3, 12):
+if True:
     from _ssl import RAND_pseudo_bytes as RAND_pseudo_bytes
 
 if sys.version_info < (3, 10):
@@ -93,18 +94,22 @@ class SSLCertVerificationError(SSLError, ValueError):
 
 # CertificateError = SSLCertVerificationError
 
-if sys.version_info < (3, 12):
+if True:
+    # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    # End duplicated section
+    # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+    @mp_available()  # force merge
     def wrap_socket(
         sock: socket.socket,
-        keyfile: StrOrBytesPath | None = None,
-        certfile: StrOrBytesPath | None = None,
+        *,
         server_side: bool = False,
-        cert_reqs: int = ...,
-        ssl_version: int = ...,
-        ca_certs: str | None = None,
-        do_handshake_on_connect: bool = True,
-        suppress_ragged_eofs: bool = True,
-        ciphers: str | None = None,
+        key: Incomplete = None,
+        cert: Incomplete = None,
+        cert_reqs: int = 0,
+        cadata: bytes | None = None,
+        server_hostname: str | None = None,
+        do_handshake: bool = True,
     ) -> SSLSocket:
         """
          Wrap the given *sock* and return a new wrapped-socket object.  The implementation
@@ -125,7 +130,7 @@ if sys.version_info < (3, 12):
         """
         ...
 
-def create_default_context(
+def __mpy_has_no_create_default_context(
     purpose: Purpose = ...,
     *,
     cafile: StrOrBytesPath | None = None,
@@ -163,7 +168,7 @@ else:
 
 _create_default_https_context: Callable[..., SSLContext]
 
-if sys.version_info < (3, 12):
+if True:
     def match_hostname(cert: _PeerCertRetDictType, hostname: str) -> None: ...
 
 def cert_time_to_seconds(cert_time: str) -> int: ...
@@ -193,8 +198,20 @@ class VerifyMode(enum.IntEnum):
     CERT_REQUIRED = 2
 
 CERT_NONE: VerifyMode
+"""\
+Supported values for *cert_reqs* parameter, and the :attr:`SSLContext.verify_mode`
+attribute.
+"""
 CERT_OPTIONAL: VerifyMode
+"""\
+Supported values for *cert_reqs* parameter, and the :attr:`SSLContext.verify_mode`
+attribute.
+"""
 CERT_REQUIRED: VerifyMode
+"""\
+Supported values for *cert_reqs* parameter, and the :attr:`SSLContext.verify_mode`
+attribute.
+"""
 
 class VerifyFlags(enum.IntFlag):
     VERIFY_DEFAULT = 0
@@ -235,7 +252,9 @@ class _SSLMethod(enum.IntEnum):
 # PROTOCOL_TLSv1_2: _SSLMethod
 # PROTOCOL_TLS: _SSLMethod
 PROTOCOL_TLS_CLIENT: _SSLMethod
+"""Supported values for the *protocol* parameter."""
 PROTOCOL_TLS_SERVER: _SSLMethod
+"""Supported values for the *protocol* parameter."""
 
 class Options(enum.IntFlag):
     OP_ALL = 2147483728
@@ -356,7 +375,7 @@ class Purpose(_ASN1Object, enum.Enum):
     SERVER_AUTH = (129, "serverAuth", "TLS Web Server Authentication", "1.3.6.1.5.5.7.3.2")  # pyright: ignore[reportCallIssue]
     CLIENT_AUTH = (130, "clientAuth", "TLS Web Client Authentication", "1.3.6.1.5.5.7.3.1")  # pyright: ignore[reportCallIssue]
 
-class SSLSocket(socket.socket):
+class SSLSocket:
     context: SSLContext
     server_side: bool
     server_hostname: str | None
@@ -366,19 +385,29 @@ class SSLSocket(socket.socket):
     def __init__(self, *args: Any, **kwargs: Any) -> None: ...
     def connect(self, addr: socket._Address) -> None: ...
     def connect_ex(self, addr: socket._Address) -> int: ...
-    def recv(self, buflen: int = 1024, flags: int = 0) -> bytes: ...
-    def recv_into(self, buffer: WriteableBuffer, nbytes: int | None = None, flags: int = 0) -> int: ...
+    # ifdef MBEDTLS_SSL_PROTO_DTLS
+    @mp_available(macro="MBEDTLS_SSL_PROTO_DTLS")  # force merge
+    def recv(self, *argv, **kwargs) -> Incomplete: ...
+    @mp_available(macro="MBEDTLS_SSL_PROTO_DTLS")  # force merge
+    def recv_into(self, *argv, **kwargs) -> Incomplete: ...
     def recvfrom(self, buflen: int = 1024, flags: int = 0) -> tuple[bytes, socket._RetAddress]: ...
     def recvfrom_into(self, buffer: WriteableBuffer, nbytes: int | None = None, flags: int = 0) -> tuple[int, socket._RetAddress]: ...
-    def send(self, data: ReadableBuffer, flags: int = 0) -> int: ...
-    def sendall(self, data: ReadableBuffer, flags: int = 0) -> None: ...
+    @mp_available(macro="MBEDTLS_SSL_PROTO_DTLS")  # force merge
+    def send(self, *argv, **kwargs) -> Incomplete: ...
+    @mp_available(macro="MBEDTLS_SSL_PROTO_DTLS")  # force merge
+    def sendall(self, *argv, **kwargs) -> Incomplete: ...
     @overload
     def sendto(self, data: ReadableBuffer, flags_or_addr: socket._Address, addr: None = None) -> int: ...
     @overload
     def sendto(self, data: ReadableBuffer, flags_or_addr: int, addr: socket._Address) -> int: ...
     def shutdown(self, how: int) -> None: ...
-    def read(self, len: int = 1024, buffer: bytearray | None = None) -> bytes: ...
-    def write(self, data: ReadableBuffer) -> int: ...
+    # TODO : SSLSocket is undocumented
+    # ref: micropython\extmod\modtls_axtls.c ( read ... close)
+    # repos\micropython\extmod\modtls_mbedtls.c
+    @mp_available()  # force merge
+    def read(self, *argv, **kwargs) -> Incomplete: ...
+    @mp_available()  # force merge
+    def write(self, *argv, **kwargs) -> Incomplete: ...
     def do_handshake(self, block: bool = False) -> None: ...  # block is undocumented
     @overload
     def getpeercert(self, binary_form: Literal[False] = False) -> _PeerCertRetDictType | None: ...
@@ -386,7 +415,13 @@ class SSLSocket(socket.socket):
     def getpeercert(self, binary_form: Literal[True]) -> bytes | None: ...
     @overload
     def getpeercert(self, binary_form: bool) -> _PeerCertRetType: ...
-    def cipher(self) -> tuple[str, str, int] | None: ...
+    # endif
+    # ifdef (MBEDTLS_SSL_KEEP_PEER_CERTIFICATE)
+    @mp_available(macro="MBEDTLS_SSL_KEEP_PEER_CERTIFICATE")  # force merge
+    def getpeercert(self, *argv, **kwargs) -> Incomplete: ...
+    # endif
+    @mp_available()  # force merge
+    def cipher(self, *argv, **kwargs) -> Incomplete: ...
     def shared_ciphers(self) -> list[tuple[str, str, int]] | None: ...
     def compression(self) -> str | None: ...
     def get_channel_binding(self, cb_type: str = "tls-unique") -> bytes | None: ...
@@ -404,6 +439,21 @@ class SSLSocket(socket.socket):
     if sys.version_info >= (3, 13):
         def get_verified_chain(self) -> list[bytes]: ...
         def get_unverified_chain(self) -> list[bytes]: ...
+    @mp_available()  # force merge
+    def readinto(self, *argv, **kwargs) -> Incomplete: ...
+    @mp_available()  # force merge
+    def readline(self, *argv, **kwargs) -> Incomplete: ...
+    @mp_available()  # force merge
+    def setblocking(self, *argv, **kwargs) -> Incomplete: ...
+    @mp_available()  # force merge
+    def close(self, *argv, **kwargs) -> Incomplete: ...
+    # if MICROPY_PY_SSL_FINALISER
+    @mp_available(macro="MICROPY_PY_SSL_FINALISER")  # force merge
+    def __del__(self, *argv, **kwargs) -> Incomplete: ...
+    # endif
+    # ifdef MICROPY_UNIX_COVERAGE
+    @mp_available(macro="MICROPY_UNIX_COVERAGE")  # force merge
+    def ioctl(self, *argv, **kwargs) -> Incomplete: ...
 
 class TLSVersion(enum.IntEnum):
     MINIMUM_SUPPORTED = -2
@@ -445,19 +495,13 @@ class SSLContext:
         def __new__(cls, protocol: int = ..., *args: Any, **kwargs: Any) -> Self: ...
 
     def load_default_certs(self, purpose: Purpose = ...) -> None: ...
-    def load_verify_locations(
-        self,
-        cafile: StrOrBytesPath | None = None,
-        capath: StrOrBytesPath | None = None,
-        cadata: str | ReadableBuffer | None = None,
-    ) -> None:
+    def load_verify_locations(self, cafile=None, cadata: bytes | None = None) -> None:
         """
         Load the CA certificate chain that will validate the peer's certificate.
         *cafile* is the file path of the CA certificates.  *cadata* is a bytes object
         containing the CA certificates.  Only one of these arguments should be provided.
         """
         ...
-
     @overload
     def get_ca_certs(self, binary_form: Literal[False] = False) -> list[_PeerCertRetDictType]: ...
     @overload
@@ -469,15 +513,13 @@ class SSLContext:
         Get a list of enabled ciphers, returned as a list of strings.
         """
         ...
-
     def set_default_verify_paths(self) -> None: ...
-    def set_ciphers(self, cipherlist: str, /) -> None:
+    def set_ciphers(self, ciphers) -> None:
         """
         Set the available ciphers for sockets created with this context.  *ciphers* should be
         a list of strings in the `IANA cipher suite format <https://wiki.mozilla.org/Security/Cipher_Suites>`_ .
         """
         ...
-
     def set_alpn_protocols(self, alpn_protocols: Iterable[str]) -> None: ...
     def set_npn_protocols(self, npn_protocols: Iterable[str]) -> None: ...
     def set_servername_callback(self, server_name_callback: _SrvnmeCbType | None) -> None: ...
@@ -486,11 +528,10 @@ class SSLContext:
     def wrap_socket(
         self,
         sock: socket.socket,
+        *,
         server_side: bool = False,
         do_handshake_on_connect: bool = True,
-        suppress_ragged_eofs: bool = True,
-        server_hostname: str | bytes | None = None,
-        session: SSLSession | None = None,
+        server_hostname: str | None = None,
     ) -> SSLSocket:
         """
         Takes a `stream` *sock* (usually socket.socket instance of ``SOCK_STREAM`` type),
@@ -513,9 +554,11 @@ class SSLContext:
         - *server_hostname* is for use as a client, and sets the hostname to check against the received
           server certificate.  It also sets the name for Server Name Indication (SNI), allowing the server
           to present the proper certificate.
+
+        - *client_id* is a MicroPython-specific extension argument used only when implementing a DTLS
+          Server. See :ref:`dtls` for details.
         """
         ...
-
     def wrap_bio(
         self,
         incoming: MemoryBIO,
@@ -524,6 +567,20 @@ class SSLContext:
         server_hostname: str | bytes | None = None,
         session: SSLSession | None = None,
     ) -> SSLObject: ...
+    @mp_available()  # force merge
+    def load_cert_chain(self, certfile, keyfile) -> None:
+        """
+        Load a private key and the corresponding certificate.  The *certfile* is a string
+        with the file path of the certificate.  The *keyfile* is a string with the file path
+        of the private key.
+
+        Admonition:Difference to CPython
+           :class: attention
+
+           MicroPython extension: *certfile* and *keyfile* can be bytes objects instead of
+           strings, in which case they are interpreted as the actual certificate/key data.
+        """
+        ...
 
 class SSLObject:
     context: SSLContext
@@ -588,3 +645,8 @@ if sys.version_info < (3, 9):
 # SOCK_STREAM: int
 # SOL_SOCKET: int
 # SO_TYPE: int
+PROTOCOL_DTLS_CLIENT: Incomplete
+"""Supported values for the *protocol* parameter."""
+PROTOCOL_DTLS_SERVER: Incomplete
+"""Supported values for the *protocol* parameter."""
+MBEDTLS_VERSION: str = "Mbed TLS 3.6.0"

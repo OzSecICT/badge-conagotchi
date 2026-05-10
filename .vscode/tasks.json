@@ -4,150 +4,106 @@
         {
             "label": "Flash Firmware",
             "type": "shell",
-            "command": "esptool.py",
+            "command": "esptool",
             "args": [
                 "--chip", "esp32s3",
-                "--before", "default_reset",
-                "--after", "hard_reset",
-                "write_flash",
+                "--before", "default-reset",
+                "--after", "hard-reset",
+                "write-flash",
                 "-z",
                 "0x0",
-                "firmware/ESP32_GENERIC_S3-20251209-v1.27.0.bin"
+                "firmware/ESP32_GENERIC_S3-SPIRAM_OCT-20251209-v1.27.0.bin"
             ],
+            "options": {
+                "shell": { "executable": "/bin/bash", "args": ["-lc"] }
+            },
             "windows": {
                 "command": "esptool",
-                "args": [
-                    "--chip", "esp32s3",
-                    "--before", "default_reset",
-                    "--after", "hard_reset",
-                    "write_flash",
-                    "-z",
-                    "0x0",
-                    "firmware/ESP32_GENERIC_S3-20251209-v1.27.0.bin"
-                ]
+                "options": {
+                    "shell": { "executable": "powershell.exe", "args": ["-NoProfile", "-Command"] }
+                }
             },
             "group": "build",
-            "presentation": {
-                "reveal": "always",
-                "panel": "shared",
-                "clear": true
-            },
+            "presentation": { "reveal": "always", "panel": "shared", "clear": true },
             "problemMatcher": []
         },
         {
             "label": "Deploy Code",
             "type": "shell",
             "command": "mpremote",
-            "args": [
-                "cp",
-                "-r",
-                "source/.",
-                ":"
-            ],
-            "group": "build",
-            "presentation": {
-                "reveal": "always",
-                "panel": "shared",
-                "clear": true
+            "args": ["cp", "-r", "source/.", ":"],
+            "options": {
+                "shell": { "executable": "/bin/bash", "args": ["-lc"] }
             },
+            "windows": {
+                "options": {
+                    "shell": { "executable": "powershell.exe", "args": ["-NoProfile", "-Command"] }
+                }
+            },
+            "group": "build",
+            "presentation": { "reveal": "always", "panel": "shared", "clear": true },
             "problemMatcher": []
         },
         {
             "label": "Reset Device",
             "type": "shell",
             "command": "mpremote",
-            "args": [
-                "reset"
-            ],
-            "group": "test",
-            "presentation": {
-                "reveal": "always",
-                "panel": "shared",
-                "clear": true
+            "args": ["reset"],
+            "options": {
+                "shell": { "executable": "/bin/bash", "args": ["-lc"] }
             },
+            "windows": {
+                "options": {
+                    "shell": { "executable": "powershell.exe", "args": ["-NoProfile", "-Command"] }
+                }
+            },
+            "group": "test",
+            "presentation": { "reveal": "always", "panel": "shared", "clear": true },
             "problemMatcher": []
         },
         {
             "label": "Check Dependencies",
             "type": "shell",
-            "command": "echo",
-            "args": ["Checking dependencies..."],
-            "linux": {
-                "command": "bash",
-                "args": [
-                    "-c",
-                    "echo '--- Checking dependencies ---' && (command -v esptool.py >/dev/null 2>&1 && echo '[OK]  esptool.py found at '$(which esptool.py) || echo '[MISSING] esptool.py not found') && (command -v mpremote >/dev/null 2>&1 && echo '[OK]  mpremote found at '$(which mpremote) || echo '[MISSING] mpremote not found') && echo '--- Done ---'"
-                ]
-            },
-            "osx": {
-                "command": "bash",
-                "args": [
-                    "-c",
-                    "echo '--- Checking dependencies ---' && (command -v esptool.py >/dev/null 2>&1 && echo '[OK]  esptool.py found at '$(which esptool.py) || echo '[MISSING] esptool.py not found') && (command -v mpremote >/dev/null 2>&1 && echo '[OK]  mpremote found at '$(which mpremote) || echo '[MISSING] mpremote not found') && echo '--- Done ---'"
-                ]
+            "command": "echo '--- Checking dependencies ---' && (command -v esptool.py >/dev/null 2>&1 && echo '[OK]  esptool.py found at '$(which esptool.py) || echo '[MISSING] esptool.py not found') && (command -v mpremote >/dev/null 2>&1 && echo '[OK]  mpremote found at '$(which mpremote) || echo '[MISSING] mpremote not found') && echo '--- Done ---'",
+            "options": {
+                "shell": { "executable": "/bin/bash", "args": ["-lc"] }
             },
             "windows": {
-                "command": "powershell",
-                "args": [
-                    "-NoProfile", "-Command",
-                    "Write-Host '--- Checking dependencies ---'; if (Get-Command esptool -ErrorAction SilentlyContinue) { Write-Host '[OK]  esptool found at '(Get-Command esptool).Source } else { Write-Host '[MISSING] esptool not found' }; if (Get-Command mpremote -ErrorAction SilentlyContinue) { Write-Host '[OK]  mpremote found at '(Get-Command mpremote).Source } else { Write-Host '[MISSING] mpremote not found' }; Write-Host '--- Done ---'"
-                ]
+                "command": "Write-Host '--- Checking dependencies ---'; if (Get-Command esptool -ErrorAction SilentlyContinue) { Write-Host '[OK]  esptool found at '(Get-Command esptool).Source } else { Write-Host '[MISSING] esptool not found' }; if (Get-Command mpremote -ErrorAction SilentlyContinue) { Write-Host '[OK]  mpremote found at '(Get-Command mpremote).Source } else { Write-Host '[MISSING] mpremote not found' }; Write-Host '--- Done ---'",
+                "options": {
+                    "shell": { "executable": "powershell.exe", "args": ["-NoProfile", "-Command"] }
+                }
             },
             "group": "test",
-            "presentation": {
-                "reveal": "always",
-                "panel": "shared",
-                "clear": true
-            },
+            "presentation": { "reveal": "always", "panel": "shared", "clear": true },
             "problemMatcher": []
         },
         {
             "label": "Install Dependencies",
             "type": "shell",
-            "command": "echo",
-            "args": ["Installing dependencies..."],
-            "linux": {
-                "command": "bash",
-                "args": [
-                    "-c",
-                    "echo '--- Installing dependencies ---' && pip install esptool mpremote && echo '--- Done ---'"
-                ]
-            },
-            "osx": {
-                "command": "bash",
-                "args": [
-                    "-c",
-                    "echo '--- Installing dependencies ---' && pip install esptool mpremote && echo '--- Done ---'"
-                ]
+            "command": "echo '--- Installing dependencies ---' && pip install esptool mpremote && echo '--- Done ---'",
+            "options": {
+                "shell": { "executable": "/bin/bash", "args": ["-lc"] }
             },
             "windows": {
-                "command": "powershell",
-                "args": [
-                    "-NoProfile", "-Command",
-                    "Write-Host '--- Installing dependencies ---'; pip install esptool mpremote; Write-Host '--- Done ---'"
-                ]
+                "command": "Write-Host '--- Installing dependencies ---'; pip install esptool mpremote; Write-Host '--- Done ---'",
+                "options": {
+                    "shell": { "executable": "powershell.exe", "args": ["-NoProfile", "-Command"] }
+                }
             },
             "group": "test",
-            "presentation": {
-                "reveal": "always",
-                "panel": "shared",
-                "clear": true
-            },
+            "presentation": { "reveal": "always", "panel": "shared", "clear": true },
             "problemMatcher": []
         },
         {
             "label": "Deploy and Reset",
             "dependsOrder": "sequence",
-            "dependsOn": [
-                "Deploy Code",
-                "Reset Device"
-            ],
-            "group": "build",
-            "presentation": {
-                "reveal": "always",
-                "panel": "shared",
-                "clear": true
+            "dependsOn": ["Deploy Code", "Reset Device"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
             },
+            "presentation": { "reveal": "always", "panel": "shared", "clear": true },
             "problemMatcher": []
         }
     ]

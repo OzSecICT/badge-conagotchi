@@ -1,7 +1,7 @@
 """
 Access binary data in a structured way.
 
-MicroPython module: https://docs.micropython.org/en/v1.23.0/library/uctypes.html
+MicroPython module: https://docs.micropython.org/en/v1.27.0/library/uctypes.html
 
 This module implements "foreign data interface" for MicroPython. The idea
 behind it is similar to CPython's ``ctypes`` modules, but the actual API is
@@ -11,51 +11,111 @@ C language allows, and then access it using familiar dot-syntax to reference
 sub-fields.
 
 ---
-Module: 'uctypes' on micropython-v1.23.0-rp2-RPI_PICO
+Module: 'uctypes' on micropython-v1.27.0-esp32-ESP32_GENERIC
 """
 
-# MCU: {'build': '', 'ver': '1.23.0', 'version': '1.23.0', 'port': 'rp2', 'board': 'RPI_PICO', 'mpy': 'v6.3', 'family': 'micropython', 'cpu': 'RP2040', 'arch': 'armv6m'}
-# Stubber: v1.23.0
+# MCU: {'variant': '', 'build': '', 'arch': 'xtensawin', 'port': 'esp32', 'board': 'ESP32_GENERIC', 'board_id': 'ESP32_GENERIC', 'mpy': 'v6.3', 'ver': '1.27.0', 'family': 'micropython', 'cpu': 'ESP32', 'version': '1.27.0'}
+# Stubber: v1.26.4
 from __future__ import annotations
+from typing import Dict, Tuple, Any, Final, Generator
 from _typeshed import Incomplete
+from _mpy_shed import AnyReadableBuf, AnyWritableBuf, mp_available
+from typing_extensions import Awaitable, TypeAlias, TypeVar
 
-VOID: int = 0
-NATIVE: int = 2
-PTR: int = 536870912
-SHORT: int = 402653184
-LONGLONG: int = 939524096
-INT8: int = 134217728
-LITTLE_ENDIAN: int = 0
-LONG: int = 671088640
-UINT: int = 536870912
-ULONG: int = 536870912
-ULONGLONG: int = 805306368
-USHORT: int = 268435456
-UINT8: int = 0
-UINT16: int = 268435456
-UINT32: int = 536870912
-UINT64: int = 805306368
-INT64: int = 939524096
-BFUINT16: int = -805306368
-BFUINT32: int = -536870912
-BFUINT8: int = -1073741824
-BFINT8: int = -939524096
-ARRAY: int = -1073741824
-BFINT16: int = -671088640
-BFINT32: int = -402653184
-BF_LEN: int = 22
-INT: int = 671088640
-INT16: int = 402653184
-INT32: int = 671088640
-FLOAT64: int = -134217728
-BF_POS: int = 17
-BIG_ENDIAN: int = 1
-FLOAT32: int = -268435456
+VOID: Final[int] = 0
+"""\
+``VOID`` is an alias for ``UINT8``, and is provided to conveniently define
+C's void pointers: ``(uctypes.PTR, uctypes.VOID)``.
+"""
+NATIVE: Final[int] = 2
+"""\
+Layout type for a native structure - with data endianness and alignment
+conforming to the ABI of the system on which MicroPython runs.
+"""
+PTR: Final[int] = 536870912
+"""\
+Type constants for pointers and arrays. Note that there is no explicit
+constant for structures, it's implicit: an aggregate type without ``PTR``
+or ``ARRAY`` flags is a structure.
+"""
+SHORT: Final[int] = 402653184
+LONGLONG: Final[int] = 939524096
+INT8: Final[int] = 134217728
+"""\
+Integer types for structure descriptors. Constants for 8, 16, 32,
+and 64 bit types are provided, both signed and unsigned.
+"""
+LITTLE_ENDIAN: Final[int] = 0
+"""\
+Layout type for a little-endian packed structure. (Packed means that every
+field occupies exactly as many bytes as defined in the descriptor, i.e.
+the alignment is 1).
+"""
+LONG: Final[int] = 671088640
+UINT: Final[int] = 536870912
+ULONG: Final[int] = 536870912
+ULONGLONG: Final[int] = 805306368
+USHORT: Final[int] = 268435456
+UINT8: Final[int] = 0
+"""\
+Integer types for structure descriptors. Constants for 8, 16, 32,
+and 64 bit types are provided, both signed and unsigned.
+"""
+UINT16: Final[int] = 268435456
+"""\
+Integer types for structure descriptors. Constants for 8, 16, 32,
+and 64 bit types are provided, both signed and unsigned.
+"""
+UINT32: Final[int] = 536870912
+"""\
+Integer types for structure descriptors. Constants for 8, 16, 32,
+and 64 bit types are provided, both signed and unsigned.
+"""
+UINT64: Final[int] = 805306368
+"""\
+Integer types for structure descriptors. Constants for 8, 16, 32,
+and 64 bit types are provided, both signed and unsigned.
+"""
+INT64: Final[int] = 939524096
+"""\
+Integer types for structure descriptors. Constants for 8, 16, 32,
+and 64 bit types are provided, both signed and unsigned.
+"""
+BFUINT16: Final[int] = -805306368
+BFUINT32: Final[int] = -536870912
+BFUINT8: Final[int] = -1073741824
+BFINT8: Final[int] = -939524096
+ARRAY: Final[int] = -1073741824
+"""\
+Type constants for pointers and arrays. Note that there is no explicit
+constant for structures, it's implicit: an aggregate type without ``PTR``
+or ``ARRAY`` flags is a structure.
+"""
+BFINT16: Final[int] = -671088640
+BFINT32: Final[int] = -402653184
+BF_LEN: Final[int] = 22
+INT: Final[int] = 671088640
+INT16: Final[int] = 402653184
+"""\
+Integer types for structure descriptors. Constants for 8, 16, 32,
+and 64 bit types are provided, both signed and unsigned.
+"""
+INT32: Final[int] = 671088640
+"""\
+Integer types for structure descriptors. Constants for 8, 16, 32,
+and 64 bit types are provided, both signed and unsigned.
+"""
+FLOAT64: Final[int] = -134217728
+"""Floating-point types for structure descriptors."""
+BF_POS: Final[int] = 17
+BIG_ENDIAN: Final[int] = 1
+"""Layout type for a big-endian packed structure."""
+FLOAT32: Final[int] = -268435456
+"""Floating-point types for structure descriptors."""
+_property: TypeAlias = Incomplete
+_descriptor: TypeAlias = Tuple | Dict
 
-def sizeof(
-    struct,
-    layout_type=NATIVE,
-) -> int:
+def sizeof(struct: struct | _descriptor | dict, layout_type: int = NATIVE, /) -> int:
     """
     Return size of data structure in bytes. The *struct* argument can be
     either a structure class or a specific instantiated structure object
@@ -63,7 +123,7 @@ def sizeof(
     """
     ...
 
-def bytes_at(addr, size) -> bytes:
+def bytes_at(addr: int, size: int, /) -> bytes:
     """
     Capture memory at the given address and size as bytes object. As bytes
     object is immutable, memory is actually duplicated and copied into
@@ -72,7 +132,7 @@ def bytes_at(addr, size) -> bytes:
     """
     ...
 
-def bytearray_at(addr, size) -> bytearray:
+def bytearray_at(addr: int, size: int, /) -> bytearray:
     """
     Capture memory at the given address and size as bytearray object.
     Unlike bytes_at() function above, memory is captured by reference,
@@ -81,7 +141,7 @@ def bytearray_at(addr, size) -> bytearray:
     """
     ...
 
-def addressof(obj) -> int:
+def addressof(obj: AnyReadableBuf, /) -> int:
     """
     Return address of an object. Argument should be bytes, bytearray or
     other object supporting buffer protocol (and address of this buffer
@@ -91,8 +151,14 @@ def addressof(obj) -> int:
 
 class struct:
     """
-    Instantiate a "foreign data structure" object based on structure address in
-    memory, descriptor (encoded as a dictionary), and layout type (see below).
+    Module contents
+    ---------------
     """
-
-    def __init__(self, *argv, **kwargs) -> None: ...
+    def __init__(self, addr: int | struct, descriptor: _descriptor, layout_type: int = NATIVE, /) -> None:
+        """
+        Instantiate a "foreign data structure" object based on structure address in
+        memory, descriptor (encoded as a dictionary), and layout type (see below).
+        """
+        ...
+    @mp_available()  # force push
+    def __getattr__(self, a): ...

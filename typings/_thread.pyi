@@ -1,7 +1,7 @@
 """
 Multithreading support.
 
-MicroPython module: https://docs.micropython.org/en/v1.23.0/library/_thread.html
+MicroPython module: https://docs.micropython.org/en/v1.27.0/library/_thread.html
 
 CPython module: :mod:`python:_thread` https://docs.python.org/3/library/_thread.html .
 
@@ -11,13 +11,14 @@ This module is highly experimental and its API is not yet fully settled
 and not yet described in this documentation.
 
 ---
-Module: '_thread' on micropython-v1.23.0-rp2-RPI_PICO
+Module: '_thread' on micropython-v1.27.0-esp32-ESP32_GENERIC
 """
 
-# MCU: {'build': '', 'ver': '1.23.0', 'version': '1.23.0', 'port': 'rp2', 'board': 'RPI_PICO', 'mpy': 'v6.3', 'family': 'micropython', 'cpu': 'RP2040', 'arch': 'armv6m'}
-# Stubber: v1.23.0
+# MCU: {'variant': '', 'build': '', 'arch': 'xtensawin', 'port': 'esp32', 'board': 'ESP32_GENERIC', 'board_id': 'ESP32_GENERIC', 'mpy': 'v6.3', 'ver': '1.27.0', 'family': 'micropython', 'cpu': 'ESP32', 'version': '1.27.0'}
+# Stubber: v1.26.4
 from __future__ import annotations
 from _typeshed import Incomplete
+from typing_extensions import Awaitable, TypeAlias, TypeVar
 
 def get_ident(*args, **kwargs) -> Incomplete: ...
 def start_new_thread(*args, **kwargs) -> Incomplete: ...

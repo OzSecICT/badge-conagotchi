@@ -1,7 +1,7 @@
 """
 Random numbers.
 
-MicroPython module: https://docs.micropython.org/en/v1.23.0/library/random.html
+MicroPython module: https://docs.micropython.org/en/v1.27.0/library/random.html
 
 This module implements a pseudo-random number generator (PRNG).
 
@@ -27,16 +27,21 @@ CPython module: :mod:`python:random` https://docs.python.org/3/library/random.ht
    enabled.
 
 ---
-Module: 'random' on micropython-v1.23.0-rp2-RPI_PICO
+Module: 'random' on micropython-v1.27.0-esp32-ESP32_GENERIC
 """
 
-# MCU: {'build': '', 'ver': '1.23.0', 'version': '1.23.0', 'port': 'rp2', 'board': 'RPI_PICO', 'mpy': 'v6.3', 'family': 'micropython', 'cpu': 'RP2040', 'arch': 'armv6m'}
-# Stubber: v1.23.0
+# MCU: {'variant': '', 'build': '', 'arch': 'xtensawin', 'port': 'esp32', 'board': 'ESP32_GENERIC', 'board_id': 'ESP32_GENERIC', 'mpy': 'v6.3', 'ver': '1.27.0', 'family': 'micropython', 'cpu': 'ESP32', 'version': '1.27.0'}
+# Stubber: v1.26.4
 from __future__ import annotations
 from _typeshed import Incomplete
-from typing import Any, Optional
+from _mpy_shed import Subscriptable
+from typing import overload
+from typing_extensions import Awaitable, TypeAlias, TypeVar
 
-def randrange(start, stop, step: Optional[Any] = None) -> int:
+_T = TypeVar("_T")
+
+@overload
+def randrange(stop: int, /) -> int:
     """
     The first form returns a random integer from the range [0, *stop*).
     The second form returns a random integer from the range [*start*, *stop*).
@@ -44,7 +49,26 @@ def randrange(start, stop, step: Optional[Any] = None) -> int:
     steps of *step*.  For instance, calling ``randrange(1, 10, 2)`` will
     return odd numbers between 1 and 9 inclusive.
     """
-    ...
+
+@overload
+def randrange(start: int, stop: int, /) -> int:
+    """
+    The first form returns a random integer from the range [0, *stop*).
+    The second form returns a random integer from the range [*start*, *stop*).
+    The third form returns a random integer from the range [*start*, *stop*) in
+    steps of *step*.  For instance, calling ``randrange(1, 10, 2)`` will
+    return odd numbers between 1 and 9 inclusive.
+    """
+
+@overload
+def randrange(start: int, stop: int, step: int, /) -> int:
+    """
+    The first form returns a random integer from the range [0, *stop*).
+    The second form returns a random integer from the range [*start*, *stop*).
+    The third form returns a random integer from the range [*start*, *stop*) in
+    steps of *step*.  For instance, calling ``randrange(1, 10, 2)`` will
+    return odd numbers between 1 and 9 inclusive.
+    """
 
 def random() -> int:
     """
@@ -52,9 +76,7 @@ def random() -> int:
     """
     ...
 
-def seed(
-    n=None,
-) -> None:
+def seed(n: int | None = None, /) -> None:
     """
     Initialise the random number generator module with the seed *n* which should
     be an integer.  When no argument (or ``None``) is passed in it will (if
@@ -66,27 +88,27 @@ def seed(
     """
     ...
 
-def uniform(a, b) -> int:
+def uniform(a: float, b: float) -> int:
     """
     Return a random floating point number N such that *a* <= N <= *b* for *a* <= *b*,
     and *b* <= N <= *a* for *b* < *a*.
     """
     ...
 
-def choice(sequence) -> Incomplete:
+def choice(sequence: Subscriptable, /) -> None:
     """
     Chooses and returns one item at random from *sequence* (tuple, list or
     any object that supports the subscript operation).
     """
     ...
 
-def randint(a, b) -> int:
+def randint(a: int, b: int, /) -> int:
     """
     Return a random integer in the range [*a*, *b*].
     """
     ...
 
-def getrandbits(n) -> int:
+def getrandbits(n: int, /) -> int:
     """
     Return an integer with *n* random bits (0 <= n <= 32).
     """

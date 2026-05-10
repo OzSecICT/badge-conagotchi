@@ -14,8 +14,13 @@ from .protocols import *
 from .queues import *
 from .runners import *
 from .streams import *
+
 # from .subprocess import *
 from .tasks import *
+from .tasks import sleep_ms as sleep_ms
+from .tasks import wait_for_ms as wait_for_ms
+from .micropython import *
+
 from .transports import *
 
 if sys.version_info >= (3, 9):

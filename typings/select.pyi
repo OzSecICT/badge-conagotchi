@@ -1,7 +1,7 @@
 """
 Wait for events on a set of streams.
 
-MicroPython module: https://docs.micropython.org/en/v1.23.0/library/select.html
+MicroPython module: https://docs.micropython.org/en/v1.27.0/library/select.html
 
 CPython module: :mod:`python:select` https://docs.python.org/3/library/select.html .
 
@@ -9,21 +9,28 @@ This module provides functions to efficiently wait for events on multiple
 `streams <stream>` (select streams which are ready for operations).
 
 ---
-Module: 'select' on micropython-v1.23.0-rp2-RPI_PICO
+Module: 'select' on micropython-v1.27.0-esp32-ESP32_GENERIC
 """
 
-# MCU: {'build': '', 'ver': '1.23.0', 'version': '1.23.0', 'port': 'rp2', 'board': 'RPI_PICO', 'mpy': 'v6.3', 'family': 'micropython', 'cpu': 'RP2040', 'arch': 'armv6m'}
-# Stubber: v1.23.0
+# MCU: {'variant': '', 'build': '', 'arch': 'xtensawin', 'port': 'esp32', 'board': 'ESP32_GENERIC', 'board_id': 'ESP32_GENERIC', 'mpy': 'v6.3', 'ver': '1.27.0', 'family': 'micropython', 'cpu': 'ESP32', 'version': '1.27.0'}
+# Stubber: v1.26.4
 from __future__ import annotations
+from typing import Any, Iterable, Iterator, List, Optional, Tuple, Final
 from _typeshed import Incomplete
-from typing import Any, Iterator, List, Optional, Tuple
+from typing_extensions import Awaitable, TypeAlias, TypeVar
 
-POLLOUT: int = 4
-POLLIN: int = 1
-POLLHUP: int = 16
-POLLERR: int = 8
+POLLOUT: Final[int] = 4
+POLLIN: Final[int] = 1
+POLLHUP: Final[int] = 16
+POLLERR: Final[int] = 8
 
-def select(rlist, wlist, xlist, timeout: Optional[Any] = None) -> None:
+def select(
+    rlist: Iterable[Any],
+    wlist: Iterable[Any],
+    xlist: Iterable[Any],
+    timeout: int = -1,
+    /,
+) -> None:
     """
     Wait for activity on a set of objects.
 
@@ -36,7 +43,6 @@ class poll:
     """
     Create an instance of the Poll class.
     """
-
     def __init__(self) -> None: ...
     def register(self, obj, eventmask: Optional[Any] = None) -> None:
         """
@@ -57,24 +63,18 @@ class poll:
         *eventmask* (i.e. will behave as `modify()`).
         """
         ...
-
     def unregister(self, obj) -> Incomplete:
         """
         Unregister *obj* from polling.
         """
         ...
-
     def modify(self, obj, eventmask) -> None:
         """
         Modify the *eventmask* for *obj*. If *obj* is not registered, `OSError`
         is raised with error of ENOENT.
         """
         ...
-
-    def poll(
-        self,
-        timeout=-1,
-    ) -> List:
+    def poll(self, timeout=-1, /) -> List:
         """
         Wait for at least one of the registered objects to become ready or have an
         exceptional condition, with optional timeout in milliseconds (if *timeout*
@@ -92,17 +92,13 @@ class poll:
 
         In case of timeout, an empty list is returned.
 
-        Difference to CPython
+        Admonition:Difference to CPython
+           :class: attention
 
            Tuples returned may contain more than 2 elements as described above.
         """
         ...
-
-    def ipoll(
-        self,
-        timeout=-1,
-        flags=0,
-    ) -> Iterator[Tuple]:
+    def ipoll(self, timeout=-1, flags=0, /) -> Iterator[Tuple]:
         """
         Like :meth:`poll.poll`, but instead returns an iterator which yields a
         `callee-owned tuple`. This function provides an efficient, allocation-free
@@ -114,7 +110,8 @@ class poll:
         won't be processed until new mask is set with `poll.modify()`. This
         behaviour is useful for asynchronous I/O schedulers.
 
-        Difference to CPython
+        Admonition:Difference to CPython
+           :class: attention
 
            This function is a MicroPython extension.
         """

@@ -1,7 +1,7 @@
 """
 Heap queue algorithm.
 
-MicroPython module: https://docs.micropython.org/en/v1.23.0/library/heapq.html
+MicroPython module: https://docs.micropython.org/en/v1.27.0/library/heapq.html
 
 CPython module: :mod:`python:heapq` https://docs.python.org/3/library/heapq.html .
 
@@ -12,15 +12,19 @@ A heap queue is essentially a list that has its elements stored in such a way
 that the first item of the list is always the smallest.
 
 ---
-Module: 'heapq' on micropython-v1.23.0-rp2-RPI_PICO
+Module: 'heapq' on micropython-v1.27.0-esp32-ESP32_GENERIC
 """
 
-# MCU: {'build': '', 'ver': '1.23.0', 'version': '1.23.0', 'port': 'rp2', 'board': 'RPI_PICO', 'mpy': 'v6.3', 'family': 'micropython', 'cpu': 'RP2040', 'arch': 'armv6m'}
-# Stubber: v1.23.0
+# MCU: {'variant': '', 'build': '', 'arch': 'xtensawin', 'port': 'esp32', 'board': 'ESP32_GENERIC', 'board_id': 'ESP32_GENERIC', 'mpy': 'v6.3', 'ver': '1.27.0', 'family': 'micropython', 'cpu': 'ESP32', 'version': '1.27.0'}
+# Stubber: v1.26.4
 from __future__ import annotations
 from _typeshed import Incomplete
+from typing import Any
+from typing_extensions import Awaitable, TypeAlias, TypeVar
 
-def heappop(heap) -> Incomplete:
+_T = TypeVar("_T")
+
+def heappop(heap: list[_T], /) -> _T:
     """
     Pop the first item from the ``heap``, and return it.  Raise ``IndexError`` if
     ``heap`` is empty.
@@ -29,13 +33,13 @@ def heappop(heap) -> Incomplete:
     """
     ...
 
-def heappush(heap, item) -> Incomplete:
+def heappush(heap: list[_T], item: _T, /) -> None:
     """
     Push the ``item`` onto the ``heap``.
     """
     ...
 
-def heapify(x) -> Incomplete:
+def heapify(x: list[Any], /) -> None:
     """
     Convert the list ``x`` into a heap.  This is an in-place operation.
     """

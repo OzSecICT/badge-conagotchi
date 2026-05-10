@@ -1,6 +1,18 @@
+"""
+Basic "operating system" services.
+
+MicroPython module: https://docs.micropython.org/en/v1.27.0/library/os.html
+
+CPython module: :mod:`python:os` https://docs.python.org/3/library/os.html .
+
+The ``os`` module contains functions for filesystem access and mounting,
+terminal redirection and duplication, and the ``uname`` and ``urandom``
+functions.
+"""
+from __future__ import annotations
 import sys
 from _typeshed import (
-    AnyStr_co,
+    Incomplete, AnyStr_co,
     BytesPath,
     FileDescriptor,
     FileDescriptorLike,
@@ -27,7 +39,7 @@ from io import BufferedRandom, BufferedReader, BufferedWriter, FileIO, TextIOWra
 from subprocess import Popen
 from types import TracebackType
 from typing import (
-    IO,
+    Iterator, Optional, Tuple, Union, IO,
     Any,
     AnyStr,
     BinaryIO,
@@ -41,15 +53,16 @@ from typing import (
     overload,
     runtime_checkable,
 )
-from typing_extensions import Self, TypeAlias, Unpack, deprecated
+from typing_extensions import Awaitable, TypeVar, Self, TypeAlias, Unpack, deprecated
 
-from . import path as _path
+# from . import path as _path
+from _mpy_shed import mp_available, uname_result
 
 if sys.version_info >= (3, 9):
     from types import GenericAlias
 
 # This unnecessary alias is to work around various errors
-path = _path  # type: ignore
+# path = _path  # type: ignore
 
 _T = TypeVar("_T")
 _T1 = TypeVar("_T1")
@@ -57,14 +70,14 @@ _T2 = TypeVar("_T2")
 
 # ----- os variables -----
 
-error = OSError
+# error = OSError
 
-supports_bytes_environ: bool
+# supports_bytes_environ: bool
 
-supports_dir_fd: set[Callable[..., Any]]
-supports_fd: set[Callable[..., Any]]
-supports_effective_ids: set[Callable[..., Any]]
-supports_follow_symlinks: set[Callable[..., Any]]
+# supports_dir_fd: set[Callable[..., Any]]
+# supports_fd: set[Callable[..., Any]]
+# supports_effective_ids: set[Callable[..., Any]]
+# supports_follow_symlinks: set[Callable[..., Any]]
 
 if sys.platform != "win32":
     # Unix only
@@ -154,48 +167,48 @@ if sys.platform == "darwin" and sys.version_info >= (3, 12):
     PRIO_DARWIN_PROCESS: int
     PRIO_DARWIN_THREAD: int
 
-SEEK_SET: int
-SEEK_CUR: int
-SEEK_END: int
+# SEEK_SET: int
+# SEEK_CUR: int
+# SEEK_END: int
 if sys.platform != "win32":
     SEEK_DATA: int  # some flavors of Unix
     SEEK_HOLE: int  # some flavors of Unix
 
-O_RDONLY: int
-O_WRONLY: int
-O_RDWR: int
-O_APPEND: int
-O_CREAT: int
-O_EXCL: int
-O_TRUNC: int
+# O_RDONLY: int
+# O_WRONLY: int
+# O_RDWR: int
+# O_APPEND: int
+# O_CREAT: int
+# O_EXCL: int
+# O_TRUNC: int
 # We don't use sys.platform for O_* flags to denote platform-dependent APIs because some codes,
 # including tests for mypy, use a more finer way than sys.platform before using these APIs
 # See https://github.com/python/typeshed/pull/2286 for discussions
-O_DSYNC: int  # Unix only
-O_RSYNC: int  # Unix only
-O_SYNC: int  # Unix only
-O_NDELAY: int  # Unix only
-O_NONBLOCK: int  # Unix only
-O_NOCTTY: int  # Unix only
-O_CLOEXEC: int  # Unix only
-O_SHLOCK: int  # Unix only
-O_EXLOCK: int  # Unix only
-O_BINARY: int  # Windows only
-O_NOINHERIT: int  # Windows only
-O_SHORT_LIVED: int  # Windows only
-O_TEMPORARY: int  # Windows only
-O_RANDOM: int  # Windows only
-O_SEQUENTIAL: int  # Windows only
-O_TEXT: int  # Windows only
-O_ASYNC: int  # Gnu extension if in C library
-O_DIRECT: int  # Gnu extension if in C library
-O_DIRECTORY: int  # Gnu extension if in C library
-O_NOFOLLOW: int  # Gnu extension if in C library
-O_NOATIME: int  # Gnu extension if in C library
-O_PATH: int  # Gnu extension if in C library
-O_TMPFILE: int  # Gnu extension if in C library
-O_LARGEFILE: int  # Gnu extension if in C library
-O_ACCMODE: int  # TODO: when does this exist?
+# O_DSYNC: int  # Unix only
+# O_RSYNC: int  # Unix only
+# O_SYNC: int  # Unix only
+# O_NDELAY: int  # Unix only
+# O_NONBLOCK: int  # Unix only
+# O_NOCTTY: int  # Unix only
+# O_CLOEXEC: int  # Unix only
+# O_SHLOCK: int  # Unix only
+# O_EXLOCK: int  # Unix only
+# O_BINARY: int  # Windows only
+# O_NOINHERIT: int  # Windows only
+# O_SHORT_LIVED: int  # Windows only
+# O_TEMPORARY: int  # Windows only
+# O_RANDOM: int  # Windows only
+# O_SEQUENTIAL: int  # Windows only
+# O_TEXT: int  # Windows only
+# O_ASYNC: int  # Gnu extension if in C library
+# O_DIRECT: int  # Gnu extension if in C library
+# O_DIRECTORY: int  # Gnu extension if in C library
+# O_NOFOLLOW: int  # Gnu extension if in C library
+# O_NOATIME: int  # Gnu extension if in C library
+# O_PATH: int  # Gnu extension if in C library
+# O_TMPFILE: int  # Gnu extension if in C library
+# O_LARGEFILE: int  # Gnu extension if in C library
+# O_ACCMODE: int  # TODO: when does this exist?
 
 if sys.platform != "win32" and sys.platform != "darwin":
     # posix, but apparently missing on macos
@@ -214,24 +227,24 @@ if sys.platform != "win32":
     ST_NOSUID: int
     ST_RDONLY: int
 
-curdir: str
-pardir: str
-sep: str
+# curdir: str
+# pardir: str
+# sep: str
 if sys.platform == "win32":
     altsep: str
 else:
     altsep: str | None
-extsep: str
-pathsep: str
-defpath: str
-linesep: str
-devnull: str
-name: str
+# extsep: str
+# pathsep: str
+# defpath: str
+# linesep: str
+# devnull: str
+# name: str
 
-F_OK: int
-R_OK: int
-W_OK: int
-X_OK: int
+# F_OK: int
+# R_OK: int
+# W_OK: int
+# X_OK: int
 
 _EnvironCodeFunc: TypeAlias = Callable[[AnyStr], AnyStr]
 
@@ -281,7 +294,7 @@ class _Environ(MutableMapping[AnyStr, AnyStr], Generic[AnyStr]):
         @overload
         def __ior__(self, other: Iterable[tuple[AnyStr, AnyStr]]) -> Self: ...
 
-environ: _Environ[str]
+# environ: _Environ[str]
 if sys.platform != "win32":
     environb: _Environ[bytes]
 
@@ -313,9 +326,9 @@ if sys.platform != "win32":
 if sys.platform != "win32" and sys.platform != "darwin" and sys.platform != "linux":
     EX_NOTFOUND: int
 
-P_NOWAIT: int
-P_NOWAITO: int
-P_WAIT: int
+# P_NOWAIT: int
+# P_NOWAITO: int
+# P_WAIT: int
 if sys.platform == "win32":
     P_DETACH: int
     P_OVERLAY: int
@@ -326,7 +339,7 @@ if sys.platform != "win32":
     WCONTINUED: int  # some Unix systems
     WUNTRACED: int  # Unix only
 
-TMP_MAX: int  # Undocumented, but used by tempfile
+# TMP_MAX: int  # Undocumented, but used by tempfile
 
 # ----- os classes (structures) -----
 @final
@@ -424,6 +437,15 @@ def listdir(path: StrPath | None = None) -> list[str]: ...
 def listdir(path: BytesPath) -> list[bytes]: ...
 @overload
 def listdir(path: int) -> list[str]: ...
+
+
+
+@mp_available()  # force merge
+def listdir(dir: Optional[Any] = None) -> Incomplete:
+    """
+       With no argument, list the current directory.  Otherwise list the given directory.
+    """
+    ...
 @final
 class DirEntry(Generic[AnyStr]):
     # This is what the scandir iterator yields
@@ -546,7 +568,19 @@ if sys.platform != "win32":
     def getsid(pid: int, /) -> int: ...
     def setsid() -> None: ...
     def setuid(uid: int, /) -> None: ...
-    def uname() -> uname_result: ...
+    def uname() -> uname_result:
+        """
+       Return a tuple (possibly a named tuple) containing information about the
+       underlying machine and/or its operating system.  The tuple has five fields
+       in the following order, each of them being a string:
+    
+            * ``sysname`` -- the name of the underlying system
+            * ``nodename`` -- the network name (can be the same as ``sysname``)
+            * ``release`` -- the version of the underlying system
+            * ``version`` -- the MicroPython version and build date
+            * ``machine`` -- an identifier for the underlying hardware (eg board, CPU)
+    """
+        ...
 
 @overload
 def getenv(key: str) -> str | None: ...
@@ -742,12 +776,23 @@ def write(fd: int, data: ReadableBuffer, /) -> int: ...
 def access(
     path: FileDescriptorOrPath, mode: int, *, dir_fd: int | None = None, effective_ids: bool = False, follow_symlinks: bool = True
 ) -> bool: ...
-def chdir(path: FileDescriptorOrPath) -> None: ...
+
+@mp_available()  # force merge
+def chdir(path) -> Incomplete:
+    """
+       Change current directory.
+    """
+    ...
 
 if sys.platform != "win32":
     def fchdir(fd: FileDescriptorLike) -> None: ...
 
-def getcwd() -> str: ...
+@mp_available()  # force merge
+def getcwd() -> Incomplete:
+    """
+       Get the current directory.
+    """
+    ...
 def getcwdb() -> bytes: ...
 def chmod(path: FileDescriptorOrPath, mode: int, *, dir_fd: int | None = None, follow_symlinks: bool = ...) -> None: ...
 
@@ -757,7 +802,9 @@ if sys.platform != "win32" and sys.platform != "linux":
 
 if sys.platform != "win32":
     def chroot(path: StrOrBytesPath) -> None: ...
-    def chown(path: FileDescriptorOrPath, uid: int, gid: int, *, dir_fd: int | None = None, follow_symlinks: bool = True) -> None: ...
+    def chown(
+        path: FileDescriptorOrPath, uid: int, gid: int, *, dir_fd: int | None = None, follow_symlinks: bool = True
+    ) -> None: ...
     def lchown(path: StrOrBytesPath, uid: int, gid: int) -> None: ...
 
 def link(
@@ -769,7 +816,13 @@ def link(
     follow_symlinks: bool = True,
 ) -> None: ...
 def lstat(path: StrOrBytesPath, *, dir_fd: int | None = None) -> stat_result: ...
-def mkdir(path: StrOrBytesPath, mode: int = 0o777, *, dir_fd: int | None = None) -> None: ...
+
+@mp_available()  # force merge
+def mkdir(path) -> Incomplete:
+    """
+       Create a new directory.
+    """
+    ...
 
 if sys.platform != "win32":
     def mkfifo(path: StrOrBytesPath, mode: int = 0o666, *, dir_fd: int | None = None) -> None: ...  # Unix only
@@ -784,12 +837,32 @@ if sys.platform != "win32":
     def pathconf(path: FileDescriptorOrPath, name: str | int) -> int: ...  # Unix only
 
 def readlink(path: GenericPath[AnyStr], *, dir_fd: int | None = None) -> AnyStr: ...
-def remove(path: StrOrBytesPath, *, dir_fd: int | None = None) -> None: ...
+
+@mp_available()  # force merge
+def remove(path) -> None:
+    """
+       Remove a file.
+    """
+    ...
 def removedirs(name: StrOrBytesPath) -> None: ...
-def rename(src: StrOrBytesPath, dst: StrOrBytesPath, *, src_dir_fd: int | None = None, dst_dir_fd: int | None = None) -> None: ...
+
+@mp_available()  # force merge
+def rename(old_path, new_path) -> None:
+    """
+       Rename a file.
+    """
+    ...
 def renames(old: StrOrBytesPath, new: StrOrBytesPath) -> None: ...
-def replace(src: StrOrBytesPath, dst: StrOrBytesPath, *, src_dir_fd: int | None = None, dst_dir_fd: int | None = None) -> None: ...
-def rmdir(path: StrOrBytesPath, *, dir_fd: int | None = None) -> None: ...
+def replace(
+    src: StrOrBytesPath, dst: StrOrBytesPath, *, src_dir_fd: int | None = None, dst_dir_fd: int | None = None
+) -> None: ...
+
+@mp_available()  # force merge
+def rmdir(path) -> None:
+    """
+       Remove a directory.
+    """
+    ...
 
 class _ScandirIterator(Iterator[DirEntry[AnyStr]], AbstractContextManager[_ScandirIterator[AnyStr], None]):
     def __next__(self) -> DirEntry[AnyStr]: ...
@@ -802,15 +875,50 @@ def scandir(path: None = None) -> _ScandirIterator[str]: ...
 def scandir(path: int) -> _ScandirIterator[str]: ...
 @overload
 def scandir(path: GenericPath[AnyStr]) -> _ScandirIterator[AnyStr]: ...
-def stat(path: FileDescriptorOrPath, *, dir_fd: int | None = None, follow_symlinks: bool = True) -> stat_result: ...
+def stat(path:str|bytes) -> stat_result:
+    """
+       Get the status of a file or directory.
+    """
+    ...
 
 if sys.platform != "win32":
-    def statvfs(path: FileDescriptorOrPath) -> statvfs_result: ...  # Unix only
+    
+    @mp_available()  # force merge
+    def statvfs(path) -> Tuple:
+        """
+       Get the status of a filesystem.
+    
+       Returns a tuple with the filesystem information in the following order:
+    
+            * ``f_bsize`` -- file system block size
+            * ``f_frsize`` -- fragment size
+            * ``f_blocks`` -- size of fs in f_frsize units
+            * ``f_bfree`` -- number of free blocks
+            * ``f_bavail`` -- number of free blocks for unprivileged users
+            * ``f_files`` -- number of inodes
+            * ``f_ffree`` -- number of free inodes
+            * ``f_favail`` -- number of free inodes for unprivileged users
+            * ``f_flag`` -- mount flags
+            * ``f_namemax`` -- maximum filename length
+    
+       Parameters related to inodes: ``f_files``, ``f_ffree``, ``f_avail``
+       and the ``f_flags`` parameter may return ``0`` as they can be unavailable
+       in a port-specific implementation.
+    """
+        ...
 
-def symlink(src: StrOrBytesPath, dst: StrOrBytesPath, target_is_directory: bool = False, *, dir_fd: int | None = None) -> None: ...
+def symlink(
+    src: StrOrBytesPath, dst: StrOrBytesPath, target_is_directory: bool = False, *, dir_fd: int | None = None
+) -> None: ...
 
 if sys.platform != "win32":
-    def sync() -> None: ...  # Unix only
+    
+    @mp_available()  # force merge
+    def sync() -> None:
+        """
+       Sync all filesystems.
+    """
+        ...
 
 def truncate(path: FileDescriptorOrPath, length: int) -> None: ...  # Unix only up to version 3.4
 def unlink(path: StrOrBytesPath, *, dir_fd: int | None = None) -> None: ...
@@ -868,8 +976,12 @@ def execl(file: StrOrBytesPath, *args: Unpack[tuple[StrOrBytesPath, Unpack[tuple
 def execlp(file: StrOrBytesPath, *args: Unpack[tuple[StrOrBytesPath, Unpack[tuple[StrOrBytesPath, ...]]]]) -> NoReturn: ...
 
 # These are: execle(file, *args, env) but env is pulled from the last element of the args.
-def execle(file: StrOrBytesPath, *args: Unpack[tuple[StrOrBytesPath, Unpack[tuple[StrOrBytesPath, ...]], _ExecEnv]]) -> NoReturn: ...
-def execlpe(file: StrOrBytesPath, *args: Unpack[tuple[StrOrBytesPath, Unpack[tuple[StrOrBytesPath, ...]], _ExecEnv]]) -> NoReturn: ...
+def execle(
+    file: StrOrBytesPath, *args: Unpack[tuple[StrOrBytesPath, Unpack[tuple[StrOrBytesPath, ...]], _ExecEnv]]
+) -> NoReturn: ...
+def execlpe(
+    file: StrOrBytesPath, *args: Unpack[tuple[StrOrBytesPath, Unpack[tuple[StrOrBytesPath, ...]], _ExecEnv]]
+) -> NoReturn: ...
 
 # The docs say `args: tuple or list of strings`
 # The implementation enforces tuple or list so we can't use Sequence.
@@ -896,7 +1008,7 @@ def execv(path: StrOrBytesPath, argv: _ExecVArgs, /) -> NoReturn: ...
 def execve(path: FileDescriptorOrPath, argv: _ExecVArgs, env: _ExecEnv) -> NoReturn: ...
 def execvp(file: StrOrBytesPath, args: _ExecVArgs) -> NoReturn: ...
 def execvpe(file: StrOrBytesPath, args: _ExecVArgs, env: _ExecEnv) -> NoReturn: ...
-def _exit(status: int) -> NoReturn: ...
+# def _exit(status: int) -> NoReturn: ...
 def kill(pid: int, signal: int, /) -> None: ...
 
 if sys.platform != "win32":
@@ -912,7 +1024,9 @@ class _wrap_close:
     def __init__(self, stream: TextIOWrapper, proc: Popen[str]) -> None: ...
     def close(self) -> int | None: ...
     def __enter__(self) -> Self: ...
-    def __exit__(self, exc_type: type[BaseException] | None, exc_val: BaseException | None, exc_tb: TracebackType | None) -> None: ...
+    def __exit__(
+        self, exc_type: type[BaseException] | None, exc_val: BaseException | None, exc_tb: TracebackType | None
+    ) -> None: ...
     def __iter__(self) -> Iterator[str]: ...
     # Methods below here don't exist directly on the _wrap_close object, but
     # are copied from the wrapped TextIOWrapper object via __getattr__.
@@ -1081,7 +1195,13 @@ if sys.platform != "win32":
 if sys.platform == "linux":
     def getrandom(size: int, flags: int = 0) -> bytes: ...
 
-def urandom(size: int, /) -> bytes: ...
+@mp_available()  # force merge
+def urandom(n:int) -> bytes:
+    """
+       Return a bytes object with *n* random bytes. Whenever possible, it is
+       generated by the hardware random number generator.
+    """
+    ...
 
 if sys.platform != "win32":
     def register_at_fork(
@@ -1184,7 +1304,9 @@ if sys.version_info >= (3, 13) and sys.platform == "linux":
     POSIX_SPAWN_CLOSEFROM: Final[int]
 
     def timerfd_create(clockid: int, /, *, flags: int = 0) -> int: ...
-    def timerfd_settime(fd: FileDescriptor, /, *, flags: int = 0, initial: float = 0.0, interval: float = 0.0) -> tuple[float, float]: ...
+    def timerfd_settime(
+        fd: FileDescriptor, /, *, flags: int = 0, initial: float = 0.0, interval: float = 0.0
+    ) -> tuple[float, float]: ...
     def timerfd_settime_ns(fd: FileDescriptor, /, *, flags: int = 0, initial: int = 0, interval: int = 0) -> tuple[int, int]: ...
     def timerfd_gettime(fd: FileDescriptor, /) -> tuple[float, float]: ...
     def timerfd_gettime_ns(fd: FileDescriptor, /) -> tuple[int, int]: ...
@@ -1197,3 +1319,89 @@ if sys.platform != "linux":
     if sys.version_info >= (3, 13) or sys.platform != "win32":
         # Added to Windows in 3.13.
         def lchmod(path: StrOrBytesPath, mode: int) -> None: ...
+
+@overload
+def ilistdir(dir: Union[str,bytes]) -> Iterator[Union[Tuple[str, int, int], Tuple[str, int, int, int]]]:
+    """
+       This function returns an iterator which then yields tuples corresponding to
+       the entries in the directory that it is listing.  With no argument it lists the
+       current directory, otherwise it lists the directory given by *dir*.
+    
+       The tuples have the form *(name, type, inode[, size])*:
+    
+        - *name* is a string (or bytes if *dir* is a bytes object) and is the name of
+          the entry;
+        - *type* is an integer that specifies the type of the entry, with 0x4000 for
+          directories and 0x8000 for regular files;
+        - *inode* is an integer corresponding to the inode of the file, and may be 0
+          for filesystems that don't have such a notion.
+        - *size* is an integer that may be included depending on the filesystem type.
+          For file entries, *size* represents the size of the file or -1 if unknown.
+          Its meaning is currently undefined for directory entries.
+    """
+    ...
+@overload
+def ilistdir() -> Iterator[Union[Tuple[str, int, int], Tuple[str, int, int, int]]]: ...
+
+@mp_available()  # force merge
+def dupterm(stream_object, index=0, /) -> IO:
+    """
+       Duplicate or switch the MicroPython terminal (the REPL) on the given `stream`-like
+       object. The *stream_object* argument must be a native stream object, or derive
+       from ``io.IOBase`` and implement the ``readinto()`` and
+       ``write()`` methods.  The stream should be in non-blocking mode and
+       ``readinto()`` should return ``None`` if there is no data available for reading.
+    
+       After calling this function all terminal output is repeated on this stream,
+       and any input that is available on the stream is passed on to the terminal input.
+    
+       The *index* parameter should be a non-negative integer and specifies which
+       duplication slot is set.  A given port may implement more than one slot (slot 0
+       will always be available) and in that case terminal input and output is
+       duplicated on all the slots that are set.
+    
+       If ``None`` is passed as the *stream_object* then duplication is cancelled on
+       the slot given by *index*.
+    
+       The function returns the previous stream-like object in the given slot.
+    """
+    ...
+
+@mp_available()  # force merge
+def dupterm_notify(obj_in: Any, /) -> None:
+    """
+        Notify the MicroPython REPL that input is available on a stream-like object
+        previously registered via `os.dupterm()`.
+    
+        This function should be called by custom stream implementations (e.g., UART,
+        Bluetooth, or other non-USB REPL streams) to inform the REPL that input is
+        ready to be read. Proper use ensures that special characters such as
+        Ctrl+C (used to trigger KeyboardInterrupt) are processed promptly by the
+        REPL, enabling expected interruption behavior for user code.
+    
+        The *obj_in* parameter is ignored by `os.dupterm_notify()`, but is required to allow calling
+        dupterm_notify from an interrupt handler such as `UART.irq()`.
+    
+        Example:
+    """
+    ...
+
+
+# Deprecated functions and classes 
+# The following functions and classes have been moved to the vfs module. 
+
+@mp_available()  # force merge
+@deprecated(   "The `mount` function is deprecated, use `vfs.mount` instead.")
+def mount(fsobj, mount_point, *, readonly=False) -> Incomplete:
+    """
+        See `vfs.mount`.
+    """
+    ...
+
+@mp_available()  # force merge
+@deprecated(   "The `umount` function is deprecated, use `vfs.umount` instead.")
+def umount(mount_point) -> Incomplete:
+    """
+        See `vfs.umount`.
+    """
+    ...

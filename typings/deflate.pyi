@@ -1,7 +1,7 @@
 """
 Deflate compression & decompression.
 
-MicroPython module: https://docs.micropython.org/en/v1.23.0/library/deflate.html
+MicroPython module: https://docs.micropython.org/en/v1.27.0/library/deflate.html
 
 This module allows compression and decompression of binary data with the
 `DEFLATE algorithm <https://en.wikipedia.org/wiki/DEFLATE>`_
@@ -19,18 +19,24 @@ This module allows compression and decompression of binary data with the
   you need to build your own firmware to enable this).
 
 ---
-Module: 'deflate' on micropython-v1.23.0-rp2-RPI_PICO
+Module: 'deflate' on micropython-v1.27.0-esp32-ESP32_GENERIC
 """
 
-# MCU: {'build': '', 'ver': '1.23.0', 'version': '1.23.0', 'port': 'rp2', 'board': 'RPI_PICO', 'mpy': 'v6.3', 'family': 'micropython', 'cpu': 'RP2040', 'arch': 'armv6m'}
-# Stubber: v1.23.0
+# MCU: {'variant': '', 'build': '', 'arch': 'xtensawin', 'port': 'esp32', 'board': 'ESP32_GENERIC', 'board_id': 'ESP32_GENERIC', 'mpy': 'v6.3', 'ver': '1.27.0', 'family': 'micropython', 'cpu': 'ESP32', 'version': '1.27.0'}
+# Stubber: v1.26.4
 from __future__ import annotations
+from typing import Final
 from _typeshed import Incomplete
+from typing_extensions import Awaitable, TypeAlias, TypeVar
 
-GZIP: int = 3
-RAW: int = 1
-ZLIB: int = 2
-AUTO: int = 0
+GZIP: Final[int] = 3
+"""Supported values for the *format* parameter."""
+RAW: Final[int] = 1
+"""Supported values for the *format* parameter."""
+ZLIB: Final[int] = 2
+"""Supported values for the *format* parameter."""
+AUTO: Final[int] = 0
+"""Supported values for the *format* parameter."""
 
 class DeflateIO:
     """
@@ -75,9 +81,8 @@ class DeflateIO:
     a socket can be wrapped, which allows for compression/decompression in both
     directions.
     """
-
     def readline(self, *args, **kwargs) -> Incomplete: ...
     def readinto(self, *args, **kwargs) -> Incomplete: ...
     def read(self, *args, **kwargs) -> Incomplete: ...
     def close(self, *args, **kwargs) -> Incomplete: ...
-    def __init__(self, *argv, **kwargs) -> None: ...
+    def __init__(self, stream, format=AUTO, wbits=0, close=False, /) -> None: ...

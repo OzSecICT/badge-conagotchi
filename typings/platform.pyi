@@ -1,7 +1,7 @@
 """
 Access to underlying platform’s identifying data.
 
-MicroPython module: https://docs.micropython.org/en/v1.23.0/library/platform.html
+MicroPython module: https://docs.micropython.org/en/v1.27.0/library/platform.html
 
 CPython module: :mod:`python:platform` https://docs.python.org/3/library/platform.html .
 
@@ -9,14 +9,15 @@ This module tries to retrieve as much platform-identifying data as possible. It
 makes this information available via function APIs.
 
 ---
-Module: 'platform' on micropython-v1.23.0-rp2-RPI_PICO
+Module: 'platform' on micropython-v1.27.0-esp32-ESP32_GENERIC
 """
 
-# MCU: {'build': '', 'ver': '1.23.0', 'version': '1.23.0', 'port': 'rp2', 'board': 'RPI_PICO', 'mpy': 'v6.3', 'family': 'micropython', 'cpu': 'RP2040', 'arch': 'armv6m'}
-# Stubber: v1.23.0
+# MCU: {'variant': '', 'build': '', 'arch': 'xtensawin', 'port': 'esp32', 'board': 'ESP32_GENERIC', 'board_id': 'ESP32_GENERIC', 'mpy': 'v6.3', 'ver': '1.27.0', 'family': 'micropython', 'cpu': 'ESP32', 'version': '1.27.0'}
+# Stubber: v1.26.4
 from __future__ import annotations
 from _typeshed import Incomplete
 from typing import Tuple
+from typing_extensions import Awaitable, TypeAlias, TypeVar
 
 def platform() -> str:
     """

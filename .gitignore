@@ -29,3 +29,9 @@ hw-test/sdkconfig.old
 hw-test/build/
 hw-test/.cache/
 hardware/kicad/OzSec2026-ESP32/.history/
+# MicroPython stub pip metadata (keep .pyi files, ignore installer noise)
+typings/*.dist-info/
+typings/_mpy_shed/
+typings/stubs/
+typings/.lock
+source/__pycache__/

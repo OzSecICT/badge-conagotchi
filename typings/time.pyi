@@ -1,16 +1,17 @@
 """
 Time related functions.
 
-MicroPython module: https://docs.micropython.org/en/v1.23.0/library/time.html
+MicroPython module: https://docs.micropython.org/en/v1.27.0/library/time.html
 
 CPython module: :mod:`python:time` https://docs.python.org/3/library/time.html .
 
 The ``time`` module provides functions for getting the current time and date,
 measuring time intervals, and for delays.
 
-**Time Epoch**: Unix port uses standard for POSIX systems epoch of
-1970-01-01 00:00:00 UTC. However, some embedded ports use epoch of
-2000-01-01 00:00:00 UTC. Epoch year may be determined with ``gmtime(0)[0]``.
+**Time Epoch**: The unix, windows, webassembly, alif, mimxrt and rp2 ports
+use the standard for POSIX systems epoch of 1970-01-01 00:00:00 UTC.
+The other embedded ports use an epoch of 2000-01-01 00:00:00 UTC.
+Epoch year may be determined with ``gmtime(0)[0]``.
 
 **Maintaining actual calendar date/time**: This requires a
 Real Time Clock (RTC). On systems with underlying OS (including some
@@ -33,16 +34,23 @@ functions below which require reference to current absolute time may
 behave not as expected.
 
 ---
-Module: 'time' on micropython-v1.23.0-rp2-RPI_PICO
+Module: 'time' on micropython-v1.27.0-esp32-ESP32_GENERIC
 """
 
-# MCU: {'build': '', 'ver': '1.23.0', 'version': '1.23.0', 'port': 'rp2', 'board': 'RPI_PICO', 'mpy': 'v6.3', 'family': 'micropython', 'cpu': 'RP2040', 'arch': 'armv6m'}
-# Stubber: v1.23.0
+# MCU: {'variant': '', 'build': '', 'arch': 'xtensawin', 'port': 'esp32', 'board': 'ESP32_GENERIC', 'board_id': 'ESP32_GENERIC', 'mpy': 'v6.3', 'ver': '1.27.0', 'family': 'micropython', 'cpu': 'ESP32', 'version': '1.27.0'}
+# Stubber: v1.26.4
 from __future__ import annotations
 from _typeshed import Incomplete
-from typing import Any, Optional, Tuple
+from _mpy_shed import _TimeTuple
+from typing import Tuple
+from typing_extensions import Awaitable, TypeAlias, TypeVar
 
-def ticks_diff(ticks1, ticks2) -> int:
+_TicksMs: TypeAlias = int
+_TicksUs: TypeAlias = int
+_TicksCPU: TypeAlias = int
+_Ticks = TypeVar("_Ticks", _TicksMs, _TicksUs, _TicksCPU, int)
+
+def ticks_diff(ticks1: _Ticks, ticks2: _Ticks, /) -> int:
     """
     Measure ticks difference between values returned from `ticks_ms()`, `ticks_us()`,
     or `ticks_cpu()` functions, as a signed value which may wrap around.
@@ -108,7 +116,7 @@ def ticks_diff(ticks1, ticks2) -> int:
     """
     ...
 
-def ticks_add(ticks, delta) -> Incomplete:
+def ticks_add(ticks: _Ticks, delta: int, /) -> _Ticks:
     """
     Offset ticks value by a given number, which can be either positive or negative.
     Given a *ticks* value, this function allows to calculate ticks value *delta*
@@ -135,7 +143,7 @@ def ticks_add(ticks, delta) -> Incomplete:
     """
     ...
 
-def ticks_cpu() -> Incomplete:
+def ticks_cpu() -> _TicksCPU:
     """
     Similar to `ticks_ms()` and `ticks_us()`, but with the highest possible resolution
     in the system. This is usually CPU clocks, and that's why the function is named that
@@ -162,7 +170,8 @@ def time() -> int:
     `ticks_ms()` and `ticks_us()` functions.  If you need calendar time, `gmtime()` or
     `localtime()` without an argument is a better choice.
 
-    Difference to CPython
+    Admonition:Difference to CPython
+       :class: attention
 
        In CPython, this function returns number of
        seconds since Unix epoch, 1970-01-01 00:00 UTC, as a floating-point,
@@ -201,7 +210,7 @@ def ticks_ms() -> int:
     """
     ...
 
-def ticks_us() -> Incomplete:
+def ticks_us() -> _TicksUs:
     """
     Just like `ticks_ms()` above, but in microseconds.
     """
@@ -214,7 +223,7 @@ def time_ns() -> int:
     """
     ...
 
-def localtime(secs: Optional[Any] = None) -> Tuple:
+def localtime(secs: int | None = None, /) -> Tuple:
     """
     Convert the time *secs* expressed in seconds since the Epoch (see above) into an
     8-tuple which contains: ``(year, month, mday, hour, minute, second, weekday, yearday)``
@@ -236,7 +245,7 @@ def localtime(secs: Optional[Any] = None) -> Tuple:
     """
     ...
 
-def sleep_us(us) -> None:
+def sleep_us(us: int, /) -> None:
     """
     Delay for given number of microseconds, should be positive or 0.
 
@@ -246,7 +255,7 @@ def sleep_us(us) -> None:
     """
     ...
 
-def gmtime(secs: Optional[Any] = None) -> Tuple:
+def gmtime(secs: int | None = None, /) -> Tuple:
     """
     Convert the time *secs* expressed in seconds since the Epoch (see above) into an
     8-tuple which contains: ``(year, month, mday, hour, minute, second, weekday, yearday)``
@@ -268,7 +277,7 @@ def gmtime(secs: Optional[Any] = None) -> Tuple:
     """
     ...
 
-def sleep_ms(ms) -> None:
+def sleep_ms(ms: int, /) -> None:
     """
     Delay for given number of milliseconds, should be positive or 0.
 
@@ -279,15 +288,15 @@ def sleep_ms(ms) -> None:
     """
     ...
 
-def mktime() -> int:
+def mktime(local_time: _TimeTuple, /) -> int:
     """
     This is inverse function of localtime. It's argument is a full 8-tuple
     which expresses a time as per localtime. It returns an integer which is
-    the number of seconds since Jan 1, 2000.
+    the number of seconds since the time epoch.
     """
     ...
 
-def sleep(seconds) -> Incomplete:
+def sleep(seconds: float, /) -> None:
     """
     Sleep for the given number of seconds. Some boards may accept *seconds* as a
     floating-point number to sleep for a fractional number of seconds. Note that

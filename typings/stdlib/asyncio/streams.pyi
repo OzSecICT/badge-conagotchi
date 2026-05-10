@@ -1,16 +1,23 @@
 import ssl
 import sys
-from _typeshed import ReadableBuffer, StrPath
 from collections.abc import Awaitable, Callable, Iterable, Sequence, Sized
 from types import ModuleType
 from typing import Any, Protocol, SupportsIndex
+
+from _typeshed import Incomplete, ReadableBuffer, StrPath
 from typing_extensions import Self, TypeAlias
 
 from . import events, protocols, transports
 from .base_events import Server
 
 if sys.platform == "win32":
-    __all__ = ("StreamReader", "StreamWriter", "StreamReaderProtocol", "open_connection", "start_server")
+    __all__ = (
+        "StreamReader",
+        "StreamWriter",
+        "StreamReaderProtocol",
+        "open_connection",
+        "start_server",
+    )
 else:
     __all__ = (
         "StreamReader",
@@ -39,10 +46,12 @@ if sys.version_info >= (3, 10):
         client_connected_cb: _ClientConnectedCallback,
         host: str | Sequence[str] | None = None,
         port: int | str | None = None,
+        backlog: int = 5,  # MicroPython backlog argument
         *,
-        limit: int = 65536,
-        ssl_handshake_timeout: float | None = ...,
-        **kwds: Any,
+        ssl: Incomplete | None = ...,
+        # limit: int = 65536,
+        # ssl_handshake_timeout: float | None = ...,
+        # **kwds: Any,
     ) -> Server: ...
 
 else:
@@ -72,11 +81,19 @@ if sys.platform != "win32":
             path: StrPath | None = None, *, limit: int = 65536, **kwds: Any
         ) -> tuple[StreamReader, StreamWriter]: ...
         async def start_unix_server(
-            client_connected_cb: _ClientConnectedCallback, path: StrPath | None = None, *, limit: int = 65536, **kwds: Any
+            client_connected_cb: _ClientConnectedCallback,
+            path: StrPath | None = None,
+            *,
+            limit: int = 65536,
+            **kwds: Any,
         ) -> Server: ...
     else:
         async def open_unix_connection(
-            path: StrPath | None = None, *, loop: events.AbstractEventLoop | None = None, limit: int = 65536, **kwds: Any
+            path: StrPath | None = None,
+            *,
+            loop: events.AbstractEventLoop | None = None,
+            limit: int = 65536,
+            **kwds: Any,
         ) -> tuple[StreamReader, StreamWriter]: ...
         async def start_unix_server(
             client_connected_cb: _ClientConnectedCallback,
@@ -94,22 +111,28 @@ class StreamReaderProtocol(FlowControlMixin, protocols.Protocol):
     def __init__(
         self,
         stream_reader: StreamReader,
-        client_connected_cb: _ClientConnectedCallback | None = None,
-        loop: events.AbstractEventLoop | None = None,
+        # client_connected_cb: _ClientConnectedCallback | None = None,
+        # loop: events.AbstractEventLoop | None = None,
     ) -> None: ...
     def __del__(self) -> None: ...
 
 class StreamWriter:
+    """\
+    Represents a writer object that provides APIs to write data to the IO stream.
+
+    It is not recommended to instantiate StreamWriter objects directly; use open_connection() and start_server() instead."""
     def __init__(
         self,
-        transport: transports.WriteTransport,
-        protocol: protocols.BaseProtocol,
-        reader: StreamReader | None,
-        loop: events.AbstractEventLoop,
+        transport: transports.WriteTransport | Incomplete,
+        protocol: protocols.BaseProtocol | Incomplete = None,
+        # MicroPython doesn't support reader and loop arguments
+        # reader: StreamReader | None,
+        # loop: events.AbstractEventLoop,
     ) -> None: ...
     @property
     def transport(self) -> transports.WriteTransport: ...
-    def write(self, data: bytes | bytearray | memoryview) -> None: ...
+    def write(self, data: bytes | bytearray | memoryview | str) -> None: ...
+    def awrite(self, data: bytes | bytearray | memoryview | str) -> Awaitable: ...
     def writelines(self, data: Iterable[bytes | bytearray | memoryview]) -> None: ...
     def write_eof(self) -> None: ...
     def can_write_eof(self) -> bool: ...
@@ -129,7 +152,11 @@ class StreamWriter:
         ) -> None: ...
     elif sys.version_info >= (3, 11):
         async def start_tls(
-            self, sslcontext: ssl.SSLContext, *, server_hostname: str | None = None, ssl_handshake_timeout: float | None = None
+            self,
+            sslcontext: ssl.SSLContext,
+            *,
+            server_hostname: str | None = None,
+            ssl_handshake_timeout: float | None = None,
         ) -> None: ...
 
     if sys.version_info >= (3, 13):
@@ -137,8 +164,24 @@ class StreamWriter:
     elif sys.version_info >= (3, 11):
         def __del__(self) -> None: ...
 
+# StreamReader: TypeAlias = StreamWriter
+
 class StreamReader:
-    def __init__(self, limit: int = 65536, loop: events.AbstractEventLoop | None = None) -> None: ...
+    def __init__(
+        self,
+        transport: transports.WriteTransport | Incomplete,
+        protocol: protocols.BaseProtocol | Incomplete = None,
+        # limit: int = 65536,
+        # loop: events.AbstractEventLoop | None = None,
+    ) -> None: ...
+    async def readinto(self, buf: bytearray | memoryview) -> int:
+        """Read up to n bytes into buf with n being equal to the length of buf.
+
+        Return the number of bytes read into buf.
+
+        This is a coroutine, and a MicroPython extension.
+        """
+        ...
     def exception(self) -> Exception: ...
     def set_exception(self, exc: Exception) -> None: ...
     def set_transport(self, transport: transports.BaseTransport) -> None: ...
