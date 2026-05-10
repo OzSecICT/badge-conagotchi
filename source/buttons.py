@@ -1,4 +1,5 @@
 import asyncio
+from asyncio import Queue
 from machine import Pin
 import time
 from config import (
@@ -29,7 +30,7 @@ class Buttons:
             for name, pin in _PINS.items()
         }
         self._last_ms = {name: 0 for name in _PINS}
-        self._queue   = asyncio.Queue()
+        self._queue   = Queue()
 
         for name, pin in self._pins.items():
             pin.irq(
